@@ -260,8 +260,7 @@ public class Data {
                 }
             }
 
-            int qq = 1;
-
+            fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
