@@ -11,9 +11,9 @@ import java.io.IOException;
 
 public class Data {
 
+    private String FilePath;
 
-    private final String FilePath;
-
+    //region Sets
     public int s = 0;
     public int f = 0;
     public int q = 0;
@@ -32,7 +32,10 @@ public class Data {
     public int t = 0;
     public int o = 0;
     public int k = 0;
+    public int ta = 0;
+    //endregion
 
+    //region Parameter
     public HashMapAmir<String, Double> FA = new HashMapAmir<String, Double>(4, "FA");
     public HashMapAmir<String, Double> FW = new HashMapAmir<String, Double>(3, "FW");
     public HashMapAmir<String, Double> FD = new HashMapAmir<String, Double>(3, "FD");
@@ -68,6 +71,9 @@ public class Data {
     public HashMapAmir<String, Double> L1 = new HashMapAmir<>(1, "L1");
     public HashMapAmir<String, Double> L2 = new HashMapAmir<>(1, "L2");
     public HashMapAmir<String, Double> DE = new HashMapAmir<>(2, "DE");
+    public HashMapAmir<String, Double> RE = new HashMapAmir<>(1, "DE");
+    public HashMapAmir<String, Double> CU = new HashMapAmir<>(1, "DE");
+    //endregion
 
     public Data(String FilePath) {
         this.FilePath = FilePath;
@@ -137,6 +143,9 @@ public class Data {
                         break;
                     case "k":
                         k = temp;
+                        break;
+                    case "ta":
+                        ta = temp;
                         break;
                 }
             }
@@ -254,6 +263,10 @@ public class Data {
                             case "CJ":
                                 read(cj, ii, sheet);
                                 break;
+                            case "RE":
+                                read(RE, ii, sheet);
+                                break;
+
 
                         }
                     }
