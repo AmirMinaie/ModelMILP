@@ -267,9 +267,9 @@ public class Module {
                                         tr * data.PS.get("j" + j, "s" + s, "t" + t));
                         }
 
-                    double pw = data.PZ1.get("t" + t) * data.L1.get("l0")
-                            + data.PZ2.get("t" + t) * data.L2.get("l0")
-                            + data.PZ3.get("t" + t) * (1 - data.L2.get("l0") - data.L1.get("l0"));
+                    double pw = data.PZ1.get("t" + t) * data.G1.get("l0")
+                            + data.PZ2.get("t" + t) * data.G2.get("l0")
+                            + data.PZ3.get("t" + t) * (1 - data.G2.get("l0") - data.G1.get("l0"));
                     for (int i = 0; i < data.i; i++)
                         for (int z = 0; z < data.z; z++)
                             Exp7.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k),
@@ -494,7 +494,7 @@ public class Module {
                                 Exp19.addTerm(1, XM.get("j" + j, "d" + d, "f" + f, "t" + t, "k" + k));
 
                             for (int i = 0; i < data.i; i++)
-                                Exp19.addTerm(-1 * data.L1.get("j" + j) * data.RM.get("j" + j),
+                                Exp19.addTerm(-1 * data.G1.get("j" + j) * data.RM.get("j" + j),
                                         X.get("i", "d", "t", "k"));
 
                         }
@@ -506,7 +506,7 @@ public class Module {
                                 Exp20.addTerm(1, XM.get("j" + j, "d" + d, "q" + q, "t" + t, "k" + k));
 
                             for (int i = 0; i < data.i; i++)
-                                Exp20.addTerm(-1 * (1 - data.L1.get("j" + j)) * data.RM.get("j" + j),
+                                Exp20.addTerm(-1 * (1 - data.G1.get("j" + j)) * data.RM.get("j" + j),
                                         X.get("i", "d", "t", "k"));
 
                         }
@@ -549,19 +549,272 @@ public class Module {
                     counter++;
                 }
             //endregion
-// TODO: 8/22/2019 23 
+
+            //region 23
             constraints[23] = new IloRange[data.m * data.t * data.j];
             counter = 0;
             for (int m = 0; m < data.m; m++)
                 for (int t = 0; t < data.t; t++)
                     for (int j = 0; j < data.j; j++) {
-                        IloLinearNumExpr Exp23= cplex.linearNumExpr();
 
-                        for (int i = 0; i < ; i++) {
-                            
+                        IloLinearNumExpr Exp23 = cplex.linearNumExpr();
+                        for (int k = 0; k < data.k; k++) {
+                            for (int s = 0; s < data.s; s++) {
+                                Exp23.addTerm(XM.get("j" + j, "s" + s, "m" + m, "t" + t, "k" + k),
+                                        1);
+                            }
+
+                            for (int i = 0; i < data.i; i++) {
+                                Exp23.addTerm(X.get("m" + m, "i" + i, "t" + t, "k" + k),
+                                        -1 * data.G2.get("j" + j) * data.RM.get("j" + j));
+                            }
                         }
-                        
+                        cplex.addEq(Exp23, 0);
+
                     }
+            //endregion
+
+            //region 24 - 27
+            constraints[24] = new IloRange[data.i * data.t];
+            constraints[25] = new IloRange[data.i * data.t];
+            constraints[26] = new IloRange[data.i * data.t];
+            constraints[27] = new IloRange[data.i * data.t];
+            counter = 0;
+
+            for (int i = 0; i < data.i; i++)
+                for (int t = 0; t < data.t; t++) {
+
+                    //region 24
+                    IloLinearNumExpr Exp24 = cplex.linearNumExpr();
+                    Exp24.addTerm(Snew[i][t], 1);
+                    Exp24.addTerm(Snew[i][t - 1], -1);
+                    for (int k = 0; k < data.k; k++) {
+                        for (int f = 0; f < data.f; f++)
+                            Exp24.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k),
+                                    1);
+                        for (int z = 0; z < data.z; z++)
+                            Exp24.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k),
+                                    -1);
+                    }
+                    constraints[24][counter] = cplex.addEq(Exp24, 0);
+                    //endregion
+
+                    //region 25
+                    IloLinearNumExpr Exp25 = cplex.linearNumExpr();
+                    Exp25.addTerm(-1 * data.L1.get("l0"), Sold[i][t - 1]);
+                    Exp25.addTerm(1 * data.L1.get("l0"), Sold[i][t]);
+                    for (int k = 0; k < data.k; k++) {
+                        for (int z = 0; z < data.z; z++)
+                            Exp25.addTerm(-1 * data.L1.get("l0"), X.get("z" + z, "i" + i, "t" + t, "k" + k));
+                        for (int n = 0; n < data.n; n++)
+                            Exp25.addTerm(1, X.get("i" + i, "n" + n, "t" + t, "k" + k));
+                    }
+                    constraints[25][counter] = cplex.addEq(Exp25, 0);
+                    //endregion
+
+                    //region 26
+                    IloLinearNumExpr Exp26 = cplex.linearNumExpr();
+                    Exp26.addTerm(-1 * data.L2.get("l0"), Sold[i][t - 1]);
+                    Exp26.addTerm(1 * data.L2.get("l0"), Sold[i][t]);
+                    for (int k = 0; k < data.k; k++) {
+                        for (int z = 0; z < data.z; z++)
+                            Exp26.addTerm(1 * data.L2.get("l0"), X.get("z" + z, "i" + i, "t" + t, "k" + k));
+                        for (int m = 0; m < data.m; m++)
+                            Exp26.addTerm(-1, X.get("i" + i, "m" + m, "t" + t, "k" + k));
+                    }
+                    constraints[26][counter] = cplex.addEq(Exp26, 0);
+                    //endregion
+
+
+                    //region 27
+                    IloLinearNumExpr Exp27 = cplex.linearNumExpr();
+                    double L3 = 1 - data.L2.get("l0") - data.L1.get("l0");
+                    Exp27.addTerm(-1 * L3, Sold[i][t - 1]);
+                    Exp27.addTerm(1 * L3, Sold[i][t]);
+                    for (int k = 0; k < data.k; k++) {
+                        for (int z = 0; z < data.z; z++)
+                            Exp27.addTerm(1 * L3, X.get("z" + z, "i" + i, "t" + t, "k" + k));
+                        for (int d = 0; d < data.d; d++)
+                            Exp27.addTerm(-1, X.get("i" + i, "d" + d, "t" + t, "k" + k));
+                    }
+                    constraints[27][counter] = cplex.addEq(Exp27, 0);
+                    //endregion
+
+                    counter++;
+                }
+            //endregion
+
+            //region 28
+            constraints[28] = new IloRange[data.f * data.t];
+
+            for (int f = 0; f < data.f; f++)
+                for (int t = 0; t < data.t; t++) {
+
+                    IloLinearNumExpr Exp28 = cplex.linearNumExpr();
+                    for (int i = 0; i < data.i; i++)
+                        for (int k = 0; k < data.k; k++) {
+                            Exp28.addTerm(1,
+                                    X.get("f" + f, "i" + i, "t" + t, "k" + k));
+                        }
+                    for (int h = 0; h < data.ho; h++)
+                        for (int o = 0; o < data.o; o++)
+                            for (int tf = 0; tf < data.t; tf++) {
+                                Exp28.addTerm(-1 * data.CA.get("h" + h, "o" + o),
+                                        FF[f][h][o][tf]);
+                            }
+                    constraints[28][counter] = cplex.addLe(Exp28, 0);
+                    counter++;
+                }
+            //endregion
+
+            //region 29
+            constraints[29] = new IloRange[data.f * data.t];
+
+            for (int f = 0; f < data.f; f++) {
+
+                IloLinearNumExpr Exp29 = cplex.linearNumExpr();
+                for (int h = 0; h < data.ho; h++)
+                    for (int t = 0; t < data.t; t++)
+                        for (int o = 0; o < data.o; o++) {
+                            Exp29.addTerm(1, FF[f][h][o][t]);
+                        }
+                constraints[29][f] = cplex.addLe(Exp29, 1);
+            }
+            //endregion
+
+            //region 31
+            constraints[31] = new IloRange[data.i * data.t];
+            counter = 0;
+            for (int i = 0; i < data.i; i++)
+                for (int t = 0; t < data.i; t++) {
+                    IloLinearNumExpr Exp31 = cplex.linearNumExpr();
+                    Exp31.addTerm(1, Snew[i][t]);
+                    Exp31.addTerm(1, Sold[i][t]);
+                    for (int k = 0; k < data.k; k++)
+                        for (int z = 0; z < data.z; z++) {
+                            Exp31.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k), 1);
+                        }
+                    for (int h = 0; h < data.hi; h++)
+                        for (int tf = 0; tf < data.t; tf++) {
+                            Exp31.addTerm(data.CA.get("i" + i, "h" + h), WH[i][h][tf]);
+                        }
+                    constraints[31][counter] = cplex.addLe(Exp31, 0);
+                    counter++;
+                }
+            //endregion
+
+            //region 32
+            constraints[32] = new IloRange[data.i];
+            for (int i = 0; i < data.i; i++) {
+                IloLinearNumExpr Exp32 = cplex.linearNumExpr();
+                for (int h = 0; h < data.hi; h++)
+                    for (int t = 0; t < data.t; t++)
+                        Exp32.addTerm(WH[i][h][t], 1);
+                cplex.addLe(Exp32, 1);
+            }
+            //endregion
+
+            //region 34
+            constraints[34] = new IloRange[data.t * data.t];
+            counter = 0;
+            for (int t = 0; t < data.t; t++)
+                for (int d = 0; d < data.d; d++) {
+                    IloLinearNumExpr Exp34 = cplex.linearNumExpr();
+
+                    for (int i = 0; i < data.i; i++) {
+                        for (int k = 0; k < data.k; k++)
+                            Exp34.addTerm(X.get("i" + i, "d" + d, "t" + t, "k" + k)
+                                    , 1);
+
+                        for (int h = 0; h < data.hd; h++)
+                            for (int tf = 0; tf < data.t; tf++)
+                                Exp34.addTerm(-1 * data.CA.get("d" + d, "h" + h),
+                                        DA[d][h][tf]);
+                        constraints[34][counter] = cplex.addLe(Exp34, 0);
+                        counter++;
+                    }
+                }
+            //endregion
+
+            //region 35
+            constraints[35] = new IloRange[data.d];
+            for (int d = 0; d < data.d; d++) {
+
+                IloLinearNumExpr Exp35 = cplex.linearNumExpr();
+                for (int h = 0; h < data.hd; h++)
+                    for (int t = 0; t < data.t; t++)
+                        Exp35.addTerm(DA[d][h][t], 1);
+                constraints[35][d] = cplex.addLe(Exp35, 1);
+            }
+            //endregion
+
+            //region 37
+            constraints[37] = new IloRange[data.t * data.n];
+            counter = 0;
+            for (int t = 0; t < data.t; t++)
+                for (int n = 0; n < data.n; n++) {
+
+                    IloLinearNumExpr Exp37 = cplex.linearNumExpr();
+                    for (int i = 0; i < data.i; i++)
+                        for (int k = 0; k < data.k; k++)
+                            Exp37.addTerm(1,
+                                    X.get("i" + i, "n" + n, "t" + t, "k" + k));
+                    for (int h = 0; h < data.hn; h++)
+                        for (int tf = 0; tf < data.t; tf++)
+                            Exp37.addTerm(RF[n][h][tf],
+                                    -1 * data.CA.get("n" + n, "h" + h));
+                    constraints[37][counter] = cplex.addLe(0, Exp37);
+                    counter++;
+                }
+            //endregion
+
+            //region 38
+            constraints[38] = new IloRange[data.n];
+            for (int n = 0; n < data.n; n++) {
+                IloLinearNumExpr Exp38 = cplex.linearNumExpr();
+
+                for (int h = 0; h < data.hn; h++)
+                    for (int t = 0; t < data.t; t++)
+                        Exp38.addTerm(1, RF[n][h][t]);
+
+                constraints[38][n] = cplex.addLe(1, Exp38);
+            }
+            //endregion
+
+            //region 40
+            constraints[40] = new IloRange[data.t * data.m];
+            counter = 0;
+            for (int t = 0; t < data.t; t++)
+                for (int m = 0; m < data.m; m++) {
+
+                    IloLinearNumExpr Exp40 = cplex.linearNumExpr();
+                    for (int i = 0; i < data.i; i++)
+                        for (int k = 0; k < data.k; k++)
+                            Exp40.addTerm(1,
+                                    X.get("i" + i, "m" + m, "t" + t, "k" + k));
+                    for (int h = 0; h < data.hm; h++)
+                        for (int tf = 0; tf < data.t; tf++)
+                            Exp40.addTerm(RM[m][h][tf],
+                                    -1 * data.CA.get("m" + m, "h" + h));
+                    constraints[40][counter] = cplex.addLe(0, Exp40);
+                    counter++;
+                }
+            //endregion
+
+            //region 41
+            constraints[41] = new IloRange[data.m];
+            for (int m = 0; m < data.m; m++) {
+                IloLinearNumExpr Exp41 = cplex.linearNumExpr();
+
+                for (int h = 0; h < data.hn; h++)
+                    for (int t = 0; t < data.t; t++)
+                        Exp41.addTerm(1, RM[m][h][t]);
+
+                constraints[41][m] = cplex.addLe(1, Exp41);
+            }
+            //endregion
+
+
 
 
         } catch (
