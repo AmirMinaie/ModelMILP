@@ -73,6 +73,7 @@ public class Data {
     public HashMapAmir<String, Double> DE = new HashMapAmir<>(2, "DE");
     public HashMapAmir<String, Double> RE = new HashMapAmir<>(1, "DE");
     public HashMapAmir<String, Double> CU = new HashMapAmir<>(1, "DE");
+    public HashMapAmir<String, Double> BE = new HashMapAmir<>(1, "DE");
     //endregion
 
     public Data(String FilePath) {
@@ -266,7 +267,12 @@ public class Data {
                             case "RE":
                                 read(RE, ii, sheet);
                                 break;
-
+                            case "BE":
+                                read(BE, ii, sheet);
+                                break;
+                            case "CU":
+                                read(CU, ii, sheet);
+                                break;
 
                         }
                     }
