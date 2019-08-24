@@ -43,8 +43,8 @@ public class Data {
     public HashMapAmir<String, Double> FM = new HashMapAmir<String, Double>(3, "FM");
     public HashMapAmir<String, Double> FQ = new HashMapAmir<String, Double>(3, "FQ");
     public HashMapAmir<String, Double> DS = new HashMapAmir<String, Double>(2, "DS");
-    public HashMapAmir<String, Double> C = new HashMapAmir<String, Double>(2, "C");
-    public HashMapAmir<String, Double> CJ = new HashMapAmir<String, Double>(2, "cj");
+    public HashMapAmir<String, Double> C = new HashMapAmir<>(2, "C");
+    public HashMapAmir<String, Double> CJ = new HashMapAmir<String, Double>(3, "cj");
     public HashMapAmir<String, Double> OC = new HashMapAmir<String, Double>(1, "OC");
     public HashMapAmir<String, Double> OCI = new HashMapAmir<String, Double>(1, "OCI");
     public HashMapAmir<String, Double> OCD = new HashMapAmir<String, Double>(1, "OCD");
