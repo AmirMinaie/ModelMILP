@@ -43,8 +43,8 @@ public class Data {
     public HashMapAmir<String, Double> FM = new HashMapAmir<String, Double>(3, "FM");
     public HashMapAmir<String, Double> FQ = new HashMapAmir<String, Double>(3, "FQ");
     public HashMapAmir<String, Double> DS = new HashMapAmir<String, Double>(2, "DS");
-    public HashMapAmir<String, Double> c = new HashMapAmir<String, Double>(2, "c");
-    public HashMapAmir<String, Double> cj = new HashMapAmir<String, Double>(2, "cj");
+    public HashMapAmir<String, Double> C = new HashMapAmir<String, Double>(2, "C");
+    public HashMapAmir<String, Double> CJ = new HashMapAmir<String, Double>(2, "cj");
     public HashMapAmir<String, Double> OC = new HashMapAmir<String, Double>(1, "OC");
     public HashMapAmir<String, Double> OCI = new HashMapAmir<String, Double>(1, "OCI");
     public HashMapAmir<String, Double> OCD = new HashMapAmir<String, Double>(1, "OCD");
@@ -65,7 +65,7 @@ public class Data {
     public HashMapAmir<String, Double> CAM = new HashMapAmir<String, Double>(1, "CAM");
     public HashMapAmir<String, Double> CAQ = new HashMapAmir<String, Double>(1, "CAQ");
     public HashMapAmir<String, Double> BU = new HashMapAmir<String, Double>(1, "BU");
-    public HashMapAmir<String, Double> r = new HashMapAmir<String, Double>(1, "r");
+    public HashMapAmir<String, Double> R = new HashMapAmir<String, Double>(1, "R");
     public HashMapAmir<String, Double> G1 = new HashMapAmir<String, Double>(1, "G1");
     public HashMapAmir<String, Double> G2 = new HashMapAmir<>(1, "G2");
     public HashMapAmir<String, Double> L1 = new HashMapAmir<>(1, "L1");
@@ -180,8 +180,8 @@ public class Data {
                             case "DS":
                                 read(DS, ii, sheet);
                                 break;
-                            case "c":
-                                read(c, ii, sheet);
+                            case "C":
+                                read(C, ii, sheet);
                                 break;
                             case "OC":
                                 read(OC, ii, sheet);
@@ -243,8 +243,8 @@ public class Data {
                             case "BU":
                                 read(BU, ii, sheet);
                                 break;
-                            case "r":
-                                read(r, ii, sheet);
+                            case "R ":
+                                read(R, ii, sheet);
                                 break;
                             case "G1":
                                 read(G1, ii, sheet);
@@ -262,7 +262,7 @@ public class Data {
                                 read(DE, ii, sheet);
                                 break;
                             case "CJ":
-                                read(cj, ii, sheet);
+                                read(CJ, ii, sheet);
                                 break;
                             case "RE":
                                 read(RE, ii, sheet);
@@ -301,6 +301,5 @@ public class Data {
             }
             Par.put(sheet.getRow(l).getCell(Par.getNumberKey() + ii).getNumericCellValue(), key);
         }
-        int hh = 00;
     }
 }
