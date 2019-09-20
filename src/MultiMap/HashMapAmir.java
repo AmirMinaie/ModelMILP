@@ -18,7 +18,7 @@ public class HashMapAmir<K, V> {
 
     public V get(K... Key) {
         if (Key.length != this.numberKey)
-            return null;
+            throw new NullPointerException();
 
         for (MapAmir m : values) {
             boolean b = true;
@@ -33,8 +33,7 @@ public class HashMapAmir<K, V> {
                 return (V) m.getValue();
 
         }
-        return null;
-
+        throw new NullPointerException();
     }
 
     public HashMapAmir<K, V> gets(K... Key) {

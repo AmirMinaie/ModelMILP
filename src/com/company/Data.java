@@ -45,25 +45,20 @@ public class Data {
     public HashMapAmir<String, Double> DS = new HashMapAmir<String, Double>(2, "DS");
     public HashMapAmir<String, Double> C = new HashMapAmir<>(2, "C");
     public HashMapAmir<String, Double> CJ = new HashMapAmir<String, Double>(3, "cj");
-    public HashMapAmir<String, Double> OC = new HashMapAmir<String, Double>(1, "OC");
+    public HashMapAmir<String, Double> OC = new HashMapAmir<String, Double>(2, "OC");
     public HashMapAmir<String, Double> OCI = new HashMapAmir<String, Double>(1, "OCI");
     public HashMapAmir<String, Double> OCD = new HashMapAmir<String, Double>(1, "OCD");
     public HashMapAmir<String, Double> OCN = new HashMapAmir<String, Double>(1, "OCN");
     public HashMapAmir<String, Double> OCM = new HashMapAmir<String, Double>(1, "OCM");
-    public HashMapAmir<String, Double> PS = new HashMapAmir<String, Double>(1, "PS");
-    public HashMapAmir<String, Double> PQ = new HashMapAmir<String, Double>(1, "PQ");
+    public HashMapAmir<String, Double> PS = new HashMapAmir<String, Double>(3, "PS");
+    public HashMapAmir<String, Double> PQ = new HashMapAmir<String, Double>(2, "PQ");
     public HashMapAmir<String, Double> PZ = new HashMapAmir<String, Double>(1, "PZ");
     public HashMapAmir<String, Double> PZ1 = new HashMapAmir<String, Double>(1, "PZ1");
     public HashMapAmir<String, Double> PZ2 = new HashMapAmir<String, Double>(1, "PZ2");
-    public HashMapAmir<String, Double> PZ3 = new HashMapAmir<String, Double>(2, "PZ3");
+    public HashMapAmir<String, Double> PZ3 = new HashMapAmir<String, Double>(1, "PZ3");
     public HashMapAmir<String, Double> A = new HashMapAmir<String, Double>(1, "A");
     public HashMapAmir<String, Double> RM = new HashMapAmir<String, Double>(1, "RM");
     public HashMapAmir<String, Double> CA = new HashMapAmir<String, Double>(1, "CA");
-    public HashMapAmir<String, Double> Cai = new HashMapAmir<String, Double>(1, "Cai");
-    public HashMapAmir<String, Double> CAD = new HashMapAmir<String, Double>(1, "CAD");
-    public HashMapAmir<String, Double> CAN = new HashMapAmir<String, Double>(1, "CAN");
-    public HashMapAmir<String, Double> CAM = new HashMapAmir<String, Double>(1, "CAM");
-    public HashMapAmir<String, Double> CAQ = new HashMapAmir<String, Double>(1, "CAQ");
     public HashMapAmir<String, Double> BU = new HashMapAmir<String, Double>(1, "BU");
     public HashMapAmir<String, Double> R = new HashMapAmir<String, Double>(1, "R");
     public HashMapAmir<String, Double> G1 = new HashMapAmir<String, Double>(1, "G1");
@@ -224,21 +219,6 @@ public class Data {
                                 break;
                             case "CA":
                                 read(CA, ii, sheet);
-                                break;
-                            case "Cai":
-                                read(Cai, ii, sheet);
-                                break;
-                            case "CAD":
-                                read(CAD, ii, sheet);
-                                break;
-                            case "CAN":
-                                read(CAN, ii, sheet);
-                                break;
-                            case "CAM":
-                                read(CAM, ii, sheet);
-                                break;
-                            case "CAQ":
-                                read(CAQ, ii, sheet);
                                 break;
                             case "BU":
                                 read(BU, ii, sheet);

@@ -10,11 +10,12 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) throws IloException {
+
         Data data = new Data("./InputData.xlsx");
         Module module = new Module(data);
         module.cplex.solve();
         System.out.println("sssssssss");
-        Example_2.solveMe();
+
 
     }
 }
