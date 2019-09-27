@@ -82,7 +82,7 @@ public class Data {
             Workbook wb = WorkbookFactory.create(fis);
             Sheet sheet = wb.getSheetAt(0);
 
-            for (int l = 1; l <= sheet.getLastRowNum(); l++) {
+            for (int l = 1; l <= 19; l++) {
                 int temp = (int) sheet.getRow(l).getCell(2).getNumericCellValue();
                 switch (sheet.getRow(l).getCell(1).getStringCellValue().toLowerCase()) {
 

@@ -884,7 +884,7 @@ public class Module {
                 for (int z = 0; z < data.z; z++) {
 
                     IloLinearNumExpr Exp48 = cplex.linearNumExpr();
-                    for (int i = 0; i < data.z; i++)
+                    for (int i = 0; i < data.i; i++)
                         for (int k = 0; k < data.k; k++)
                             Exp48.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k), 1);
 
@@ -892,7 +892,7 @@ public class Module {
                             data.DE.get("z" + z, "t" + t), GenConstrint(48, "q", counter));
 
                     IloLinearNumExpr Exp49 = cplex.linearNumExpr();
-                    for (int i = 0; i < data.z; i++)
+                    for (int i = 0; i < data.i; i++)
                         for (int k = 0; k < data.k; k++)
                             Exp49.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k), 1);
 
@@ -1143,7 +1143,7 @@ public class Module {
                             for (int f = 0; f < data.f; f++)
                                 XM.put(cplex.numVar(0, Double.MAX_VALUE), "j" + j, "s" + s, "f" + f, "t" + t, "k" + k);
 
-                            for (int m = 0; m < data.f; m++)
+                            for (int m = 0; m < data.m; m++)
                                 XM.put(cplex.numVar(0, Double.MAX_VALUE), "j" + j, "s" + s, "m" + m, "t" + t, "k" + k);
                         }
 
