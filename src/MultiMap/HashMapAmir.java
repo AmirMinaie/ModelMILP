@@ -16,6 +16,27 @@ public class HashMapAmir<K, V> {
         this.name = name;
     }
 
+    public MapAmir getMap(K... Key) {
+        if (Key.length != this.numberKey)
+            throw new NullPointerException();
+
+        for (MapAmir m : values) {
+            boolean b = true;
+            for (int i = 0; i < numberKey; i++) {
+                if (!m.getKey()[i].equals(Key[i])) {
+                    b = false;
+                    break;
+                }
+            }
+
+            if (b)
+                return m;
+
+        }
+        throw new NullPointerException();
+    }
+
+
     public V get(K... Key) {
         if (Key.length != this.numberKey)
             throw new NullPointerException();
@@ -36,9 +57,10 @@ public class HashMapAmir<K, V> {
         throw new NullPointerException();
     }
 
-    public HashMapAmir<K, V> gets(K... Key) {
+    public Object gets(String... Key) {
+
         if (Key.length != this.numberKey)
-            return null;
+            throw new NullPointerException();
 
         HashMapAmir resalte = new HashMapAmir(numberKey, name);
 
@@ -54,13 +76,9 @@ public class HashMapAmir<K, V> {
             }
             if (b) {
                 resalte.put(m.getValue(), m.getKey());
-
             }
         }
-
         return resalte;
-
-
     }
 
     public void put(V value, K... Key) {
@@ -82,7 +100,7 @@ public class HashMapAmir<K, V> {
 
         }
         if (add) {
-            values.add(new MapAmir<>(value, Key));
+            values.add(new MapAmir<>(this.name, value, Key));
         }
     }
 
@@ -97,5 +115,9 @@ public class HashMapAmir<K, V> {
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<MapAmir<K, V>> getValus() {
+        return values;
     }
 }
