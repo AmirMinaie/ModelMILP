@@ -32,7 +32,7 @@ public class Data {
     public int t = 0;
     public int o = 0;
     public int k = 0;
-    public int ta = 0;
+    public int e = 0;
     //endregion
 
     //region Parameter
@@ -140,8 +140,8 @@ public class Data {
                     case "k":
                         k = temp;
                         break;
-                    case "ta":
-                        ta = temp;
+                    case "e":
+                        e = temp;
                         break;
                 }
             }

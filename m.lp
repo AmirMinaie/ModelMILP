@@ -2,7 +2,7 @@
 \Problem name: ilog.cplex
 
 Minimize
- obj: NTC#0 + _ENC#1
+ obj: NTC#0 + _ENCT#1
 Subject To
  constraint_2#0:         - NTC#0 + TFC#2 + TTC#3 + TOC#4 + TPC#5 - BEN#6  = 0
  constraint_3#1:         - TFC#2 + FC(t0)#7 + 1.11111111111111 FC(t1)#8
@@ -101,8 +101,10 @@ Subject To
                          + 14.4444444444444 XM(j0,d0,q0,t1,k0)#59
                          + 19.7530864197531 X(i0,z0,t2,k0)#65
                          + 16.0493827160494 XM(j0,d0,q0,t2,k0)#74  = 0
- constraint_9#9:         TEN#88 + PEN#89 - _EN#90  = 0
- constraint_10#10:       170 XM(j0,s0,f0,t0,k0)#31 + 60 XM(j0,s0,f1,t0,k0)#32
+ constraint_9#9:         TEN(t0)#88 + PEN(t0)#89 - _EN(t0)#90  = 0
+ constraint_9#10:        TEN(t1)#91 + PEN(t1)#92 - _EN(t1)#93  = 0
+ constraint_9#11:        TEN(t2)#94 + PEN(t2)#95 - _EN(t2)#96  = 0
+ constraint_10(t0)#12:   170 XM(j0,s0,f0,t0,k0)#31 + 60 XM(j0,s0,f1,t0,k0)#32
                          + 156.204993518133 X(f0,i0,t0,k0)#33
                          + 22.3606797749979 X(f1,i0,t0,k0)#34
                          + 94.8683298050514 X(i0,z0,t0,k0)#35
@@ -115,8 +117,9 @@ Subject To
                          + 110 XM(j0,d0,f0,t0,k0)#42
                          + 90.5538513813742 XM(j0,d0,f1,t0,k0)#43
                          + 60 XM(j0,d0,q0,t0,k0)#44
-                         + 42.4264068711928 XM(j0,s0,m0,t0,k0)#45
-                         + 170 XM(j0,s0,f0,t1,k0)#46 + 60 XM(j0,s0,f1,t1,k0)#47
+                         + 42.4264068711928 XM(j0,s0,m0,t0,k0)#45 - TEN(t0)#88
+                          = 0
+ constraint_10(t1)#13:   170 XM(j0,s0,f0,t1,k0)#46 + 60 XM(j0,s0,f1,t1,k0)#47
                          + 156.204993518133 X(f0,i0,t1,k0)#48
                          + 22.3606797749979 X(f1,i0,t1,k0)#49
                          + 94.8683298050514 X(i0,z0,t1,k0)#50
@@ -129,8 +132,9 @@ Subject To
                          + 110 XM(j0,d0,f0,t1,k0)#57
                          + 90.5538513813742 XM(j0,d0,f1,t1,k0)#58
                          + 60 XM(j0,d0,q0,t1,k0)#59
-                         + 42.4264068711928 XM(j0,s0,m0,t1,k0)#60
-                         + 170 XM(j0,s0,f0,t2,k0)#61 + 60 XM(j0,s0,f1,t2,k0)#62
+                         + 42.4264068711928 XM(j0,s0,m0,t1,k0)#60 - TEN(t1)#91
+                          = 0
+ constraint_10(t2)#14:   170 XM(j0,s0,f0,t2,k0)#61 + 60 XM(j0,s0,f1,t2,k0)#62
                          + 156.204993518133 X(f0,i0,t2,k0)#63
                          + 22.3606797749979 X(f1,i0,t2,k0)#64
                          + 94.8683298050514 X(i0,z0,t2,k0)#65
@@ -143,143 +147,176 @@ Subject To
                          + 110 XM(j0,d0,f0,t2,k0)#72
                          + 90.5538513813742 XM(j0,d0,f1,t2,k0)#73
                          + 60 XM(j0,d0,q0,t2,k0)#74
-                         + 42.4264068711928 XM(j0,s0,m0,t2,k0)#75 - TEN#88  = 0
- constraint_11#11:       14 P(f0,o0,t0)#76 + 14 P(f1,o0,t0)#77
-                         + 14 P(f0,o0,t1)#80 + 14 P(f1,o0,t1)#81
-                         + 14 P(f0,o0,t2)#84 + 14 P(f1,o0,t2)#85 - PEN#89  = 0
- constraint_12#12:       - _ENC#1 + 10 At(t0)#91 + 20 At(t1)#92 + 30 At(t2)#93
-                         + 40 At(t3)#94  = 0
- constraint_13#13:       - _EN#90 + At(t0)#91 + At(t1)#92 + At(t2)#93
-                         + At(t3)#94  = 0
- constraint_14_0#14:     At(t0)#91 <= 15
- constraint_14_1#15:     At(t0)#91 - 15 W(t0)#95 <= 0
- constraint_15_(t0)#16:  - At(t1)#92 + 10 W(t0)#95 >= 0
- constraint_15_(t1)#17:  - At(t1)#92 + 10 W(t1)#96 <= 0
- constraint_15_(t2)#18:  - At(t2)#93 + 10 W(t1)#96 >= 0
- constraint_15_(t3)#19:  - At(t2)#93 + 10 W(t2)#97 <= 0
- constraint_17#20:       - At(t3)#94 + 1.79769313486232e+308 W(t2)#97 >= 0
- constraint_18_(q0)#21:  XM(j0,s0,f0,t0,k0)#31 - X(f0,i0,t0,k0)#33
+                         + 42.4264068711928 XM(j0,s0,m0,t2,k0)#75 - TEN(t2)#94
+                          = 0
+ constraint_11#15:       14 P(f0,o0,t0)#76 + 14 P(f1,o0,t0)#77 - PEN(t0)#89
+                          = 0
+ constraint_11#16:       14 P(f0,o0,t1)#80 + 14 P(f1,o0,t1)#81 - PEN(t1)#92
+                          = 0
+ constraint_11#17:       14 P(f0,o0,t2)#84 + 14 P(f1,o0,t2)#85 - PEN(t2)#95
+                          = 0
+ constraint_12#18:       - _ENCT#1 + _ENC(t0)#97 + 1.1 _ENC(t1)#98
+                         + 1.21 _ENC(t2)#99  = 0
+ constraint_13(t0)#19:   - _ENC(t0)#97  = 0
+ constraint_13(t1)#20:   - _ENC(t1)#98  = 0
+ constraint_13(t2)#21:   - _ENC(t2)#99  = 0
+ constraint_13(t0)#22:   - _EN(t0)#90 + At(t0,e0)#100 + At(t1,e0)#101
+                         + At(t2,e0)#102 + At(t3,e0)#103  = 0
+ constraint_13(t1)#23:   - _EN(t0)#90 - _EN(t1)#93 + At(t0,e0)#100
+                         + At(t1,e0)#101 + At(t2,e0)#102 + At(t3,e0)#103
+                         + At(t0,e1)#104 + At(t1,e1)#105 + At(t2,e1)#106
+                         + At(t3,e1)#107  = 0
+ constraint_13(t2)#24:   - _EN(t0)#90 - _EN(t1)#93 - _EN(t2)#96 + At(t0,e0)#100
+                         + At(t1,e0)#101 + At(t2,e0)#102 + At(t3,e0)#103
+                         + At(t0,e1)#104 + At(t1,e1)#105 + At(t2,e1)#106
+                         + At(t3,e1)#107 + At(t0,e2)#108 + At(t1,e2)#109
+                         + At(t2,e2)#110 + At(t3,e2)#111  = 0
+ constraint_15_0(t0)#25: At(t0,e0)#100 <= 15
+ constraint_15_1(t0)#26: At(t0,e0)#100 - 15 W(e0,t0)#112 <= 0
+ constraint_15_0(t1)#27: At(t0,e1)#104 <= 15
+ constraint_15_1(t1)#28: At(t0,e1)#104 - 15 W(e0,t1)#113 <= 0
+ constraint_15_0(t2)#29: At(t0,e2)#108 <= 15
+ constraint_15_1(t2)#30: At(t0,e2)#108 - 15 W(e0,t2)#114 <= 0
+ constraint_15_(q0)#31:  - At(t1,e0)#101 + 10 W(e0,t0)#112 >= 0
+ constraint_15_(q1)#32:  - At(t1,e0)#101 + 10 W(e1,t0)#115 <= 0
+ constraint_15_(q2)#33:  - At(t1,e1)#105 + 10 W(e0,t1)#113 >= 0
+ constraint_15_(q3)#34:  - At(t1,e1)#105 + 10 W(e1,t1)#116 <= 0
+ constraint_15_(q4)#35:  - At(t1,e2)#109 + 10 W(e0,t2)#114 >= 0
+ constraint_15_(q5)#36:  - At(t1,e2)#109 + 10 W(e1,t2)#117 <= 0
+ constraint_15_(q6)#37:  - At(t2,e0)#102 + 10 W(e1,t0)#115 >= 0
+ constraint_15_(q7)#38:  - At(t2,e0)#102 + 10 W(e2,t0)#118 <= 0
+ constraint_15_(q8)#39:  - At(t2,e1)#106 + 10 W(e1,t1)#116 >= 0
+ constraint_15_(q9)#40:  - At(t2,e1)#106 + 10 W(e2,t1)#119 <= 0
+ constraint_15_(q10)#41: - At(t2,e2)#110 + 10 W(e1,t2)#117 >= 0
+ constraint_15_(q11)#42: - At(t2,e2)#110 + 10 W(e2,t2)#120 <= 0
+ constraint_17(t0)#43:   - At(t3,e0)#103 + 1.79769313486232e+308 W(e2,t0)#118
+                         >= 0
+ constraint_17(t1)#44:   - At(t3,e1)#107 + 1.79769313486232e+308 W(e2,t1)#119
+                         >= 0
+ constraint_17(t2)#45:   - At(t3,e2)#111 + 1.79769313486232e+308 W(e2,t2)#120
+                         >= 0
+ constraint_18_(q0)#46:  XM(j0,s0,f0,t0,k0)#31 - X(f0,i0,t0,k0)#33
                          + XM(j0,d0,f0,t0,k0)#42  = 0
- constraint_18_(q0)#22:  XM(j0,s0,f0,t1,k0)#46 - X(f0,i0,t1,k0)#48
+ constraint_18_(q0)#47:  XM(j0,s0,f0,t1,k0)#46 - X(f0,i0,t1,k0)#48
                          + XM(j0,d0,f0,t1,k0)#57  = 0
- constraint_18_(q0)#23:  XM(j0,s0,f0,t2,k0)#61 - X(f0,i0,t2,k0)#63
+ constraint_18_(q0)#48:  XM(j0,s0,f0,t2,k0)#61 - X(f0,i0,t2,k0)#63
                          + XM(j0,d0,f0,t2,k0)#72  = 0
- constraint_18_(q0)#24:  XM(j0,s0,f1,t0,k0)#32 - X(f1,i0,t0,k0)#34
+ constraint_18_(q0)#49:  XM(j0,s0,f1,t0,k0)#32 - X(f1,i0,t0,k0)#34
                          + XM(j0,d0,f1,t0,k0)#43  = 0
- constraint_18_(q0)#25:  XM(j0,s0,f1,t1,k0)#47 - X(f1,i0,t1,k0)#49
+ constraint_18_(q0)#50:  XM(j0,s0,f1,t1,k0)#47 - X(f1,i0,t1,k0)#49
                          + XM(j0,d0,f1,t1,k0)#58  = 0
- constraint_18_(q0)#26:  XM(j0,s0,f1,t2,k0)#62 - X(f1,i0,t2,k0)#64
+ constraint_18_(q0)#51:  XM(j0,s0,f1,t2,k0)#62 - X(f1,i0,t2,k0)#64
                          + XM(j0,d0,f1,t2,k0)#73  = 0
- constraint_19_(q0)#27:  - 0.01 X(i0,d0,t0,k0)#37 + XM(j0,d0,f0,t0,k0)#42
+ constraint_19_(q0)#52:  - 0.01 X(i0,d0,t0,k0)#37 + XM(j0,d0,f0,t0,k0)#42
                          + XM(j0,d0,f1,t0,k0)#43  = 0
- constraint_20_(q0)#28:  - 0.99 X(i0,d0,t0,k0)#37 + XM(j0,d0,q0,t0,k0)#44  = 0
- constraint_19_(q1)#29:  - 0.01 X(i0,d0,t1,k0)#52 + XM(j0,d0,f0,t1,k0)#57
+ constraint_20_(q0)#53:  - 0.99 X(i0,d0,t0,k0)#37 + XM(j0,d0,q0,t0,k0)#44  = 0
+ constraint_19_(q1)#54:  - 0.01 X(i0,d0,t1,k0)#52 + XM(j0,d0,f0,t1,k0)#57
                          + XM(j0,d0,f1,t1,k0)#58  = 0
- constraint_20_(q1)#30:  - 0.99 X(i0,d0,t1,k0)#52 + XM(j0,d0,q0,t1,k0)#59  = 0
- constraint_19_(q2)#31:  - 0.01 X(i0,d0,t2,k0)#67 + XM(j0,d0,f0,t2,k0)#72
+ constraint_20_(q1)#55:  - 0.99 X(i0,d0,t1,k0)#52 + XM(j0,d0,q0,t1,k0)#59  = 0
+ constraint_19_(q2)#56:  - 0.01 X(i0,d0,t2,k0)#67 + XM(j0,d0,f0,t2,k0)#72
                          + XM(j0,d0,f1,t2,k0)#73  = 0
- constraint_20_(q2)#32:  - 0.99 X(i0,d0,t2,k0)#67 + XM(j0,d0,q0,t2,k0)#74  = 0
- constraint_21_(q0)#33:  X(i0,n0,t0,k0)#38 - X(n0,i0,t0,k0)#39  = 0
- constraint_21_(q1)#34:  X(i0,n0,t1,k0)#53 - X(n0,i0,t1,k0)#54  = 0
- constraint_21_(q2)#35:  X(i0,n0,t2,k0)#68 - X(n0,i0,t2,k0)#69  = 0
- constraint_22_(q0)#36:  X(i0,m0,t0,k0)#40 - X(m0,i0,t0,k0)#41  = 0
- constraint_22_(q1)#37:  X(i0,m0,t1,k0)#55 - X(m0,i0,t1,k0)#56  = 0
- constraint_22_(q2)#38:  X(i0,m0,t2,k0)#70 - X(m0,i0,t2,k0)#71  = 0
- constraint_23_(q0)#39:  - 0.76 X(m0,i0,t0,k0)#41 + XM(j0,s0,m0,t0,k0)#45  = 0
- constraint_23_(q1)#40:  - 0.76 X(m0,i0,t1,k0)#56 + XM(j0,s0,m0,t1,k0)#60  = 0
- constraint_23_(q2)#41:  - 0.76 X(m0,i0,t2,k0)#71 + XM(j0,s0,m0,t2,k0)#75  = 0
- constraint_24_(q0)#42:  X(f0,i0,t0,k0)#33 + X(f1,i0,t0,k0)#34
+ constraint_20_(q2)#57:  - 0.99 X(i0,d0,t2,k0)#67 + XM(j0,d0,q0,t2,k0)#74  = 0
+ constraint_21_(q0)#58:  X(i0,n0,t0,k0)#38 - X(n0,i0,t0,k0)#39  = 0
+ constraint_21_(q1)#59:  X(i0,n0,t1,k0)#53 - X(n0,i0,t1,k0)#54  = 0
+ constraint_21_(q2)#60:  X(i0,n0,t2,k0)#68 - X(n0,i0,t2,k0)#69  = 0
+ constraint_22_(q0)#61:  X(i0,m0,t0,k0)#40 - X(m0,i0,t0,k0)#41  = 0
+ constraint_22_(q1)#62:  X(i0,m0,t1,k0)#55 - X(m0,i0,t1,k0)#56  = 0
+ constraint_22_(q2)#63:  X(i0,m0,t2,k0)#70 - X(m0,i0,t2,k0)#71  = 0
+ constraint_23_(q0)#64:  - 0.76 X(m0,i0,t0,k0)#41 + XM(j0,s0,m0,t0,k0)#45  = 0
+ constraint_23_(q1)#65:  - 0.76 X(m0,i0,t1,k0)#56 + XM(j0,s0,m0,t1,k0)#60  = 0
+ constraint_23_(q2)#66:  - 0.76 X(m0,i0,t2,k0)#71 + XM(j0,s0,m0,t2,k0)#75  = 0
+ constraint_24_(q0)#67:  X(f0,i0,t0,k0)#33 + X(f1,i0,t0,k0)#34
                          - X(i0,z0,t0,k0)#35 + Snew(i0,t0)#79  = 0
- constraint_25_(q0)#43:  - 0.3 X(z0,i0,t0,k0)#36 + X(i0,n0,t0,k0)#38
+ constraint_25_(q0)#68:  - 0.3 X(z0,i0,t0,k0)#36 + X(i0,n0,t0,k0)#38
                          + 0.3 Sold(i0,t0)#78  = 0
- constraint_26_(q0)#44:  0.3 X(z0,i0,t0,k0)#36 - X(i0,m0,t0,k0)#40
+ constraint_26_(q0)#69:  0.3 X(z0,i0,t0,k0)#36 - X(i0,m0,t0,k0)#40
                          + 0.3 Sold(i0,t0)#78  = 0
- constraint_27_(q0)#45:  0.4 X(z0,i0,t0,k0)#36 - X(i0,d0,t0,k0)#37
+ constraint_27_(q0)#70:  0.4 X(z0,i0,t0,k0)#36 - X(i0,d0,t0,k0)#37
                          + 0.4 Sold(i0,t0)#78  = 0
- constraint_24_(q1)#46:  X(f0,i0,t1,k0)#48 + X(f1,i0,t1,k0)#49
+ constraint_24_(q1)#71:  X(f0,i0,t1,k0)#48 + X(f1,i0,t1,k0)#49
                          - X(i0,z0,t1,k0)#50 - Snew(i0,t0)#79 + Snew(i0,t1)#83
                           = 0
- constraint_25_(q1)#47:  - 0.3 X(z0,i0,t1,k0)#51 + X(i0,n0,t1,k0)#53
+ constraint_25_(q1)#72:  - 0.3 X(z0,i0,t1,k0)#51 + X(i0,n0,t1,k0)#53
                          - 0.3 Sold(i0,t0)#78 + 0.3 Sold(i0,t1)#82  = 0
- constraint_26_(q1)#48:  0.3 X(z0,i0,t1,k0)#51 - X(i0,m0,t1,k0)#55
+ constraint_26_(q1)#73:  0.3 X(z0,i0,t1,k0)#51 - X(i0,m0,t1,k0)#55
                          - 0.3 Sold(i0,t0)#78 + 0.3 Sold(i0,t1)#82  = 0
- constraint_27_(q1)#49:  0.4 X(z0,i0,t1,k0)#51 - X(i0,d0,t1,k0)#52
+ constraint_27_(q1)#74:  0.4 X(z0,i0,t1,k0)#51 - X(i0,d0,t1,k0)#52
                          - 0.4 Sold(i0,t0)#78 + 0.4 Sold(i0,t1)#82  = 0
- constraint_24_(q2)#50:  X(f0,i0,t2,k0)#63 + X(f1,i0,t2,k0)#64
+ constraint_24_(q2)#75:  X(f0,i0,t2,k0)#63 + X(f1,i0,t2,k0)#64
                          - X(i0,z0,t2,k0)#65 - Snew(i0,t1)#83 + Snew(i0,t2)#87
                           = 0
- constraint_25_(q2)#51:  - 0.3 X(z0,i0,t2,k0)#66 + X(i0,n0,t2,k0)#68
+ constraint_25_(q2)#76:  - 0.3 X(z0,i0,t2,k0)#66 + X(i0,n0,t2,k0)#68
                          - 0.3 Sold(i0,t1)#82 + 0.3 Sold(i0,t2)#86  = 0
- constraint_26_(q2)#52:  0.3 X(z0,i0,t2,k0)#66 - X(i0,m0,t2,k0)#70
+ constraint_26_(q2)#77:  0.3 X(z0,i0,t2,k0)#66 - X(i0,m0,t2,k0)#70
                          - 0.3 Sold(i0,t1)#82 + 0.3 Sold(i0,t2)#86  = 0
- constraint_27_(q2)#53:  0.4 X(z0,i0,t2,k0)#66 - X(i0,d0,t2,k0)#67
+ constraint_27_(q2)#78:  0.4 X(z0,i0,t2,k0)#66 - X(i0,d0,t2,k0)#67
                          - 0.4 Sold(i0,t1)#82 + 0.4 Sold(i0,t2)#86  = 0
- constraint_28_(q0)#54:  - 100 FF(f0,h0,o0,t0)#10 + X(f0,i0,t0,k0)#33 <= 0
- constraint_28_(q1)#55:  - 100 FF(f0,h0,o0,t0)#10 - 100 FF(f0,h0,o0,t1)#17
+ constraint_28_(q0)#79:  - 100 FF(f0,h0,o0,t0)#10 + X(f0,i0,t0,k0)#33 <= 0
+ constraint_28_(q1)#80:  - 100 FF(f0,h0,o0,t0)#10 - 100 FF(f0,h0,o0,t1)#17
                          + X(f0,i0,t1,k0)#48 <= 0
- constraint_28_(q2)#56:  - 100 FF(f0,h0,o0,t0)#10 - 100 FF(f0,h0,o0,t1)#17
+ constraint_28_(q2)#81:  - 100 FF(f0,h0,o0,t0)#10 - 100 FF(f0,h0,o0,t1)#17
                          - 100 FF(f0,h0,o0,t2)#24 + X(f0,i0,t2,k0)#63 <= 0
- constraint_28_(q3)#57:  - 100 FF(f1,h0,o0,t0)#11 + X(f1,i0,t0,k0)#34 <= 0
- constraint_28_(q4)#58:  - 100 FF(f1,h0,o0,t0)#11 - 100 FF(f1,h0,o0,t1)#18
+ constraint_28_(q3)#82:  - 100 FF(f1,h0,o0,t0)#11 + X(f1,i0,t0,k0)#34 <= 0
+ constraint_28_(q4)#83:  - 100 FF(f1,h0,o0,t0)#11 - 100 FF(f1,h0,o0,t1)#18
                          + X(f1,i0,t1,k0)#49 <= 0
- constraint_28_(q5)#59:  - 100 FF(f1,h0,o0,t0)#11 - 100 FF(f1,h0,o0,t1)#18
+ constraint_28_(q5)#84:  - 100 FF(f1,h0,o0,t0)#11 - 100 FF(f1,h0,o0,t1)#18
                          - 100 FF(f1,h0,o0,t2)#25 + X(f1,i0,t2,k0)#64 <= 0
- constraint_29_(q0)#60:  FF(f0,h0,o0,t0)#10 + FF(f0,h0,o0,t1)#17
+ constraint_29_(q0)#85:  FF(f0,h0,o0,t0)#10 + FF(f0,h0,o0,t1)#17
                          + FF(f0,h0,o0,t2)#24 <= 1
- constraint_29_(q1)#61:  FF(f1,h0,o0,t0)#11 + FF(f1,h0,o0,t1)#18
+ constraint_29_(q1)#86:  FF(f1,h0,o0,t0)#11 + FF(f1,h0,o0,t1)#18
                          + FF(f1,h0,o0,t2)#25 <= 1
- constraint_31_(q0)#62:  - 200 WH(i0,h0,t0)#12 + X(i0,z0,t0,k0)#35
+ constraint_31_(q0)#87:  - 400 WH(i0,h0,t0)#12 + X(i0,z0,t0,k0)#35
                          + X(z0,i0,t0,k0)#36 + Sold(i0,t0)#78 + Snew(i0,t0)#79
                          <= 0
- constraint_31_(q1)#63:  - 200 WH(i0,h0,t0)#12 - 200 WH(i0,h0,t1)#19
+ constraint_31_(q1)#88:  - 400 WH(i0,h0,t0)#12 - 400 WH(i0,h0,t1)#19
                          + X(i0,z0,t1,k0)#50 + X(z0,i0,t1,k0)#51
                          + Sold(i0,t1)#82 + Snew(i0,t1)#83 <= 0
- constraint_31_(q2)#64:  - 200 WH(i0,h0,t0)#12 - 200 WH(i0,h0,t1)#19
-                         - 200 WH(i0,h0,t2)#26 + X(i0,z0,t2,k0)#65
+ constraint_31_(q2)#89:  - 400 WH(i0,h0,t0)#12 - 400 WH(i0,h0,t1)#19
+                         - 400 WH(i0,h0,t2)#26 + X(i0,z0,t2,k0)#65
                          + X(z0,i0,t2,k0)#66 + Sold(i0,t2)#86 + Snew(i0,t2)#87
                          <= 0
- constraint_32_(i0)#65:  WH(i0,h0,t0)#12 + WH(i0,h0,t1)#19 + WH(i0,h0,t2)#26
+ constraint_32_(i0)#90:  WH(i0,h0,t0)#12 + WH(i0,h0,t1)#19 + WH(i0,h0,t2)#26
                          <= 1
- constraint_34_(q0)#66:  - 100 DA(d0,j0,t0)#13 + X(i0,d0,t0,k0)#37 <= 0
- constraint_34_(q1)#67:  - 100 DA(d0,j0,t0)#13 - 100 DA(d0,j0,t1)#20
+ constraint_34_(q0)#91:  - 200 DA(d0,j0,t0)#13 + X(i0,d0,t0,k0)#37 <= 0
+ constraint_34_(q1)#92:  - 200 DA(d0,j0,t0)#13 - 200 DA(d0,j0,t1)#20
                          + X(i0,d0,t1,k0)#52 <= 0
- constraint_34_(q2)#68:  - 100 DA(d0,j0,t0)#13 - 100 DA(d0,j0,t1)#20
-                         - 100 DA(d0,j0,t2)#27 + X(i0,d0,t2,k0)#67 <= 0
- constraint_35_(d0)#69:  DA(d0,j0,t0)#13 + DA(d0,j0,t1)#20 + DA(d0,j0,t2)#27
+ constraint_34_(q2)#93:  - 200 DA(d0,j0,t0)#13 - 200 DA(d0,j0,t1)#20
+                         - 200 DA(d0,j0,t2)#27 + X(i0,d0,t2,k0)#67 <= 0
+ constraint_35_(d0)#94:  DA(d0,j0,t0)#13 + DA(d0,j0,t1)#20 + DA(d0,j0,t2)#27
                          <= 1
- constraint_37_(q0)#70:  - 100 RF(d0,h0,t0)#14 + X(i0,n0,t0,k0)#38 <= 0
- constraint_37_(q1)#71:  - 100 RF(d0,h0,t0)#14 - 100 RF(d0,h0,t1)#21
+ constraint_37_(q0)#95:  - 200 RF(d0,h0,t0)#14 + X(i0,n0,t0,k0)#38 <= 0
+ constraint_37_(q1)#96:  - 200 RF(d0,h0,t0)#14 - 200 RF(d0,h0,t1)#21
                          + X(i0,n0,t1,k0)#53 <= 0
- constraint_37_(q2)#72:  - 100 RF(d0,h0,t0)#14 - 100 RF(d0,h0,t1)#21
-                         - 100 RF(d0,h0,t2)#28 + X(i0,n0,t2,k0)#68 <= 0
- constraint_38_(n0)#73:  RF(d0,h0,t0)#14 + RF(d0,h0,t1)#21 + RF(d0,h0,t2)#28
+ constraint_37_(q2)#97:  - 200 RF(d0,h0,t0)#14 - 200 RF(d0,h0,t1)#21
+                         - 200 RF(d0,h0,t2)#28 + X(i0,n0,t2,k0)#68 <= 0
+ constraint_38_(n0)#98:  RF(d0,h0,t0)#14 + RF(d0,h0,t1)#21 + RF(d0,h0,t2)#28
                          <= 1
- constraint_40_(q0)#74:  - 100 RM(m0,h0,t0)#15 + X(i0,m0,t0,k0)#40 <= 0
- constraint_40_(q1)#75:  - 100 RM(m0,h0,t0)#15 - 100 RM(m0,h0,t1)#22
+ constraint_40_(q0)#99:  - 200 RM(m0,h0,t0)#15 + X(i0,m0,t0,k0)#40 <= 0
+ constraint_40_(q1)#100: - 200 RM(m0,h0,t0)#15 - 200 RM(m0,h0,t1)#22
                          + X(i0,m0,t1,k0)#55 <= 0
- constraint_40_(q2)#76:  - 100 RM(m0,h0,t0)#15 - 100 RM(m0,h0,t1)#22
-                         - 100 RM(m0,h0,t2)#29 + X(i0,m0,t2,k0)#70 <= 0
- constraint_41_(m0)#77:  RM(m0,h0,t0)#15 + RM(m0,h0,t1)#22 + RM(m0,h0,t2)#29
+ constraint_40_(q2)#101: - 200 RM(m0,h0,t0)#15 - 200 RM(m0,h0,t1)#22
+                         - 200 RM(m0,h0,t2)#29 + X(i0,m0,t2,k0)#70 <= 0
+ constraint_41_(m0)#102: RM(m0,h0,t0)#15 + RM(m0,h0,t1)#22 + RM(m0,h0,t2)#29
                          <= 1
- constraint_43_(q0)#78:  - 100 Q(q0,h0,t0)#16 + XM(j0,d0,q0,t0,k0)#44 <= 0
- constraint_43_(q1)#79:  - 100 Q(q0,h0,t0)#16 - 100 Q(q0,h0,t1)#23
+ constraint_43_(q0)#103: - 200 Q(q0,h0,t0)#16 + XM(j0,d0,q0,t0,k0)#44 <= 0
+ constraint_43_(q1)#104: - 200 Q(q0,h0,t0)#16 - 200 Q(q0,h0,t1)#23
                          + XM(j0,d0,q0,t1,k0)#59 <= 0
- constraint_43_(q2)#80:  - 100 Q(q0,h0,t0)#16 - 100 Q(q0,h0,t1)#23
-                         - 100 Q(q0,h0,t2)#30 + XM(j0,d0,q0,t2,k0)#74 <= 0
- constraint_44_(q0)#81:  Q(q0,h0,t0)#16 + Q(q0,h0,t1)#23 + Q(q0,h0,t2)#30 <= 1
- constraint_46_(t0)#82:  FC(t0)#7 <= 0
- constraint_46_(t1)#83:  FC(t0)#7 + FC(t1)#8 <= 400000
- constraint_46_(t2)#84:  FC(t0)#7 + 1.1 FC(t1)#8 + FC(t2)#9 <= 440000
- constraint_48_(q0)#85:  X(i0,z0,t0,k0)#35 >= 100
- constraint_49_(q0)#86:  X(z0,i0,t0,k0)#36 >= 100
- constraint_48_(q1)#87:  X(i0,z0,t1,k0)#50 >= 100
- constraint_49_(q1)#88:  X(z0,i0,t1,k0)#51 >= 100
- constraint_48_(q2)#89:  X(i0,z0,t2,k0)#65 >= 100
- constraint_49_(q2)#90:  X(z0,i0,t2,k0)#66 >= 100
- constraints_50#91:      TR1(k0)#98  = 1
- constraints_52#92:      TR2(k0)#99  = 1
- constraints_54#93:      TR3(k0)#100  = 1
- constraint_51_(k0)#94:  XM(j0,s0,f0,t0,k0)#31 + XM(j0,s0,f1,t0,k0)#32
+ constraint_43_(q2)#105: - 200 Q(q0,h0,t0)#16 - 200 Q(q0,h0,t1)#23
+                         - 200 Q(q0,h0,t2)#30 + XM(j0,d0,q0,t2,k0)#74 <= 0
+ constraint_44_(q0)#106: Q(q0,h0,t0)#16 + Q(q0,h0,t1)#23 + Q(q0,h0,t2)#30 <= 1
+ constraint_46_(t0)#107: FC(t0)#7 <= 0
+ constraint_46_(t1)#108: FC(t0)#7 + FC(t1)#8 <= 400000
+ constraint_46_(t2)#109: FC(t0)#7 + 1.1 FC(t1)#8 + FC(t2)#9 <= 440000
+ constraint_48_(q0)#110: X(i0,z0,t0,k0)#35 >= 0
+ constraint_49_(q0)#111: X(z0,i0,t0,k0)#36 >= 0
+ constraint_48_(q1)#112: X(i0,z0,t1,k0)#50 >= 100
+ constraint_49_(q1)#113: X(z0,i0,t1,k0)#51 >= 100
+ constraint_48_(q2)#114: X(i0,z0,t2,k0)#65 >= 200
+ constraint_49_(q2)#115: X(z0,i0,t2,k0)#66 >= 200
+ constraints_50#116:     TR1(k0)#121  = 1
+ constraints_52#117:     TR2(k0)#122  = 1
+ constraints_54#118:     TR3(k0)#123  = 1
+ constraint_51_(k0)#119: XM(j0,s0,f0,t0,k0)#31 + XM(j0,s0,f1,t0,k0)#32
                          + XM(j0,d0,f0,t0,k0)#42 + XM(j0,d0,f1,t0,k0)#43
                          + XM(j0,s0,m0,t0,k0)#45 + XM(j0,s0,f0,t1,k0)#46
                          + XM(j0,s0,f1,t1,k0)#47 + XM(j0,d0,f0,t1,k0)#57
@@ -287,8 +324,8 @@ Subject To
                          + XM(j0,s0,f0,t2,k0)#61 + XM(j0,s0,f1,t2,k0)#62
                          + XM(j0,d0,f0,t2,k0)#72 + XM(j0,d0,f1,t2,k0)#73
                          + XM(j0,s0,m0,t2,k0)#75
-                         - 1.79769313486232e+308 TR1(k0)#98 <= 0
- constraint_53_(k0)#95:  X(f0,i0,t0,k0)#33 + X(f1,i0,t0,k0)#34
+                         - 1.79769313486232e+308 TR1(k0)#121 <= 0
+ constraint_53_(k0)#120: X(f0,i0,t0,k0)#33 + X(f1,i0,t0,k0)#34
                          + X(i0,z0,t0,k0)#35 + X(z0,i0,t0,k0)#36
                          + X(i0,n0,t0,k0)#38 + X(n0,i0,t0,k0)#39
                          + X(i0,m0,t0,k0)#40 + X(m0,i0,t0,k0)#41
@@ -300,31 +337,31 @@ Subject To
                          + X(i0,z0,t2,k0)#65 + X(z0,i0,t2,k0)#66
                          + X(i0,n0,t2,k0)#68 + X(n0,i0,t2,k0)#69
                          + X(i0,m0,t2,k0)#70 + X(m0,i0,t2,k0)#71
-                         - 1.79769313486232e+308 TR2(k0)#99 <= 0
- constraint_55_(k0)#96:  XM(j0,d0,q0,t0,k0)#44 + XM(j0,d0,q0,t1,k0)#59
+                         - 1.79769313486232e+308 TR2(k0)#122 <= 0
+ constraint_55_(k0)#121: XM(j0,d0,q0,t0,k0)#44 + XM(j0,d0,q0,t1,k0)#59
                          + XM(j0,d0,q0,t2,k0)#74
-                         - 1.79769313486232e+308 TR3(k0)#100 <= 0
- constraint_56_(q0)#97:  - X(f0,i0,t0,k0)#33 + P(f0,o0,t0)#76  = 0
- constraint_56_(q1)#98:  - X(f0,i0,t1,k0)#48 + P(f0,o0,t1)#80  = 0
- constraint_56_(q2)#99:  - X(f0,i0,t2,k0)#63 + P(f0,o0,t2)#84  = 0
- constraint_56_(q3)#100: - X(f1,i0,t0,k0)#34 + P(f1,o0,t0)#77  = 0
- constraint_56_(q4)#101: - X(f1,i0,t1,k0)#49 + P(f1,o0,t1)#81  = 0
- constraint_56_(q5)#102: - X(f1,i0,t2,k0)#64 + P(f1,o0,t2)#85  = 0
- constraint_57_(q0)#103: - 1.79769313486232e+308 FF(f0,h0,o0,t0)#10
+                         - 1.79769313486232e+308 TR3(k0)#123 <= 0
+ constraint_56_(q0)#122: - X(f0,i0,t0,k0)#33 + P(f0,o0,t0)#76  = 0
+ constraint_56_(q1)#123: - X(f0,i0,t1,k0)#48 + P(f0,o0,t1)#80  = 0
+ constraint_56_(q2)#124: - X(f0,i0,t2,k0)#63 + P(f0,o0,t2)#84  = 0
+ constraint_56_(q3)#125: - X(f1,i0,t0,k0)#34 + P(f1,o0,t0)#77  = 0
+ constraint_56_(q4)#126: - X(f1,i0,t1,k0)#49 + P(f1,o0,t1)#81  = 0
+ constraint_56_(q5)#127: - X(f1,i0,t2,k0)#64 + P(f1,o0,t2)#85  = 0
+ constraint_57_(q0)#128: - 1.79769313486232e+308 FF(f0,h0,o0,t0)#10
                          + P(f0,o0,t0)#76 <= 0
- constraint_57_(q1)#104: - 1.79769313486232e+308 FF(f1,h0,o0,t0)#11
+ constraint_57_(q1)#129: - 1.79769313486232e+308 FF(f1,h0,o0,t0)#11
                          + P(f1,o0,t0)#77 <= 0
- constraint_57_(q2)#105: - 1.79769313486232e+308 FF(f0,h0,o0,t0)#10
+ constraint_57_(q2)#130: - 1.79769313486232e+308 FF(f0,h0,o0,t0)#10
                          - 1.79769313486232e+308 FF(f0,h0,o0,t1)#17
                          + P(f0,o0,t1)#80 <= 0
- constraint_57_(q3)#106: - 1.79769313486232e+308 FF(f1,h0,o0,t0)#11
+ constraint_57_(q3)#131: - 1.79769313486232e+308 FF(f1,h0,o0,t0)#11
                          - 1.79769313486232e+308 FF(f1,h0,o0,t1)#18
                          + P(f1,o0,t1)#81 <= 0
- constraint_57_(q4)#107: - 1.79769313486232e+308 FF(f0,h0,o0,t0)#10
+ constraint_57_(q4)#132: - 1.79769313486232e+308 FF(f0,h0,o0,t0)#10
                          - 1.79769313486232e+308 FF(f0,h0,o0,t1)#17
                          - 1.79769313486232e+308 FF(f0,h0,o0,t2)#24
                          + P(f0,o0,t2)#84 <= 0
- constraint_57_(q5)#108: - 1.79769313486232e+308 FF(f1,h0,o0,t0)#11
+ constraint_57_(q5)#133: - 1.79769313486232e+308 FF(f1,h0,o0,t0)#11
                          - 1.79769313486232e+308 FF(f1,h0,o0,t1)#18
                          - 1.79769313486232e+308 FF(f1,h0,o0,t2)#25
                          + P(f1,o0,t2)#85 <= 0
@@ -351,18 +388,25 @@ Bounds
  0 <= RF(d0,h0,t2)#28 <= 1
  0 <= RM(m0,h0,t2)#29 <= 1
  0 <= Q(q0,h0,t2)#30 <= 1
- 0 <= W(t0)#95 <= 1
- 0 <= W(t1)#96 <= 1
- 0 <= W(t2)#97 <= 1
- 0 <= TR1(k0)#98 <= 1
- 0 <= TR2(k0)#99 <= 1
- 0 <= TR3(k0)#100 <= 1
+ 0 <= W(e0,t0)#112 <= 1
+ 0 <= W(e0,t1)#113 <= 1
+ 0 <= W(e0,t2)#114 <= 1
+ 0 <= W(e1,t0)#115 <= 1
+ 0 <= W(e1,t1)#116 <= 1
+ 0 <= W(e1,t2)#117 <= 1
+ 0 <= W(e2,t0)#118 <= 1
+ 0 <= W(e2,t1)#119 <= 1
+ 0 <= W(e2,t2)#120 <= 1
+ 0 <= TR1(k0)#121 <= 1
+ 0 <= TR2(k0)#122 <= 1
+ 0 <= TR3(k0)#123 <= 1
 Binaries
  FF(f0,h0,o0,t0)#10  FF(f1,h0,o0,t0)#11  WH(i0,h0,t0)#12  DA(d0,j0,t0)#13 
  RF(d0,h0,t0)#14  RM(m0,h0,t0)#15  Q(q0,h0,t0)#16  FF(f0,h0,o0,t1)#17 
  FF(f1,h0,o0,t1)#18  WH(i0,h0,t1)#19  DA(d0,j0,t1)#20  RF(d0,h0,t1)#21 
  RM(m0,h0,t1)#22  Q(q0,h0,t1)#23  FF(f0,h0,o0,t2)#24  FF(f1,h0,o0,t2)#25 
  WH(i0,h0,t2)#26  DA(d0,j0,t2)#27  RF(d0,h0,t2)#28  RM(m0,h0,t2)#29 
- Q(q0,h0,t2)#30  W(t0)#95  W(t1)#96  W(t2)#97  TR1(k0)#98  TR2(k0)#99 
- TR3(k0)#100 
+ Q(q0,h0,t2)#30  W(e0,t0)#112  W(e0,t1)#113  W(e0,t2)#114  W(e1,t0)#115 
+ W(e1,t1)#116  W(e1,t2)#117  W(e2,t0)#118  W(e2,t1)#119  W(e2,t2)#120 
+ TR1(k0)#121  TR2(k0)#122  TR3(k0)#123 
 End
