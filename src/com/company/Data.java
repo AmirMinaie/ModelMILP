@@ -1,12 +1,16 @@
 package com.company;
 
 import MultiMap.HashMapAmir;
+import MultiMap.MapAmir;
+import ilog.concert.IloNumVar;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Data {
@@ -59,6 +63,7 @@ public class Data {
     public HashMapAmir<String, Double> A = new HashMapAmir<String, Double>(1, "A");
     public HashMapAmir<String, Double> RM = new HashMapAmir<String, Double>(1, "RM");
     public HashMapAmir<String, Double> CA = new HashMapAmir<String, Double>(1, "CA");
+    public HashMapAmir<String, Double> CO = new HashMapAmir<String, Double>(2, "CO");
     public HashMapAmir<String, Double> BU = new HashMapAmir<String, Double>(1, "BU");
     public HashMapAmir<String, Double> R = new HashMapAmir<String, Double>(1, "R");
     public HashMapAmir<String, Double> G1 = new HashMapAmir<String, Double>(1, "G1");
@@ -220,6 +225,9 @@ public class Data {
                             case "CA":
                                 read(CA, ii, sheet);
                                 break;
+                            case "CO":
+                                read(CO, ii, sheet);
+                                break;
                             case "BU":
                                 read(BU, ii, sheet);
                                 break;
@@ -268,6 +276,104 @@ public class Data {
 
     }
 
+    public void WriteData(Module module) {
+        FileInputStream fis = null;
+        Workbook wb = null;
+        FileOutputStream fos = null;
+        try {
+
+            fis = new FileInputStream(FilePath);
+            wb = WorkbookFactory.create(fis);
+            fis.close();
+            Sheet sheet = null;
+
+            try {
+                wb.removeSheetAt(wb.getSheetIndex("outPut"));
+            } catch (Exception e) {
+            }
+            sheet = wb.createSheet("outPut");
+
+
+            writevalibel(sheet, module.WH);
+            writevalibel(sheet, module.FF);
+            writevalibel(sheet, module.Q);
+            writevalibel(sheet, module.DA);
+            writevalibel(sheet, module.RF);
+            writevalibel(sheet, module.RM);
+            writevalibel(sheet, module.TR1);
+            writevalibel(sheet, module.TR2);
+            writevalibel(sheet, module.TR3);
+            writevalibel(sheet, module.X);
+            writevalibel(sheet, module.XM);
+            writevalibel(sheet, module.Sh);
+            writevalibel(sheet, module.Sm);
+            writevalibel(sheet, module.Sl);
+            writevalibel(sheet, module.Sn);
+            writevalibel(sheet, module.NTC);
+            writevalibel(sheet, module.ENCT);
+            writevalibel(sheet, module.ENC);
+            writevalibel(sheet, module.TFC);
+            writevalibel(sheet, module.TOC);
+            writevalibel(sheet, module.TTC);
+            writevalibel(sheet, module.TPC);
+            writevalibel(sheet, module.BEN);
+            writevalibel(sheet, module.TEN);
+            writevalibel(sheet, module.PEN);
+            writevalibel(sheet, module.EN);
+            writevalibel(sheet, module.FC);
+            writevalibel(sheet, module.P);
+            writevalibel(sheet, module.At);
+            writevalibel(sheet, module.W);
+
+
+            fos = new FileOutputStream(FilePath);
+            wb.write(fos);
+            fos.close();
+
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+
+            try {
+                fos.close();
+            } catch (IOException exc) {
+                exc.printStackTrace();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            try {
+                fos.close();
+            } catch (IOException exc) {
+                exc.printStackTrace();
+            }
+
+        }
+    }
+
+    private void writevalibel(Sheet sheet, HashMapAmir<String, IloNumVar> ff) {
+        int c = 0;
+        if (sheet.getRow(1) != null)
+            c = sheet.getRow(1).getLastCellNum();
+
+        Row row = sheet.getRow(0);
+        if (row == null)
+            row = sheet.createRow(0);
+        row.createCell(c).setCellValue(ff.getName());
+
+        int r = 1;
+        for (MapAmir m :
+                ff.getValus()) {
+            for (int i = 0; i < m.getKey().length; i++) {
+                row = sheet.getRow(r);
+                if (row == null)
+                    row = sheet.createRow(r);
+                row.createCell(i + c).setCellValue(m.getKey()[i] + "");
+            }
+            sheet.getRow(r).createCell(c + m.getKey().length).setCellValue(m.getAmount());
+            r++;
+        }
+    }
+
+
     public void read(HashMapAmir Par, int ii, Sheet sheet) {
         int lastRow = sheet.getLastRowNum();
         for (int l = 2; l <= lastRow; l++) {
@@ -280,6 +386,8 @@ public class Data {
                 key[pp] = String.format(sheet.getRow(1).getCell(ii + pp).toString() + (int) sheet.getRow(l).getCell(ii + pp).getNumericCellValue() + "");
             }
             Par.put(sheet.getRow(l).getCell(Par.getNumberKey() + ii).getNumericCellValue(), key);
+            Par.put(sheet.getRow(l).getCell(Par.getNumberKey() + ii), key);
+
         }
     }
 }

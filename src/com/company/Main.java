@@ -19,13 +19,9 @@ public class Main {
         module.cplex.exportModel("m.lp");
         System.out.println(String.valueOf(solve));
         System.out.println(String.valueOf(module.cplex.getObjValue()));
-        System.out.println(module.FF.get("f0", "h0", "o0", "t0"));
-
-        data.BU.getMap("t0").toString();
-        module.FF.getMap("f0","h0","o0","t0").toString();
-
-
+        data.WriteData(module);
     }
+
 }
 
 class Example_2 {
