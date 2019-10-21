@@ -9,13 +9,18 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws IloException, IOException {
 
+        Scanner scanner = new Scanner(System.in);
+        String filePath = scanner.nextLine();
+        if (filePath.length()<1)
+            filePath = "./Data//InputData.xlsm";
 
-        Data data = new Data("./Data//InputData.xlsm");
+        Data data = new Data(filePath);
         Module module = new Module(data);
         boolean solve = module.cplex.solve();
         module.SetAmount(solve);
@@ -23,7 +28,7 @@ public class Main {
         System.out.println(String.valueOf(solve));
         System.out.println(String.valueOf(module.cplex.getObjValue()));
         data.WriteData(module);
-        Desktop.getDesktop().open(new File("./Data//InputData.xlsm"));
+        Desktop.getDesktop().open(new File(filePath));
 
     }
 

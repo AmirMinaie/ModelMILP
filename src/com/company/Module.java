@@ -285,7 +285,7 @@ public class Module {
                     double tr = Math.pow(1 + data.R.get("r0"), -1 * t);
                     for (int j = 0; j < data.j; j++)
                         for (int s = 0; s < data.s; s++) {
-                            for (int f = 0; f < data.k; f++)
+                            for (int f = 0; f < data.f; f++)
                                 Exp7.addTerm(XM.get("j" + j, "s" + s, "f" + f, "t" + t, "k" + k),
                                         tr * data.PS.get("j" + j, "s" + s, "t" + t));
 
