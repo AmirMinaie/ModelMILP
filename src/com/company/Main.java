@@ -5,11 +5,14 @@ import ilog.concert.IloLinearNumExpr;
 import ilog.concert.IloNumVar;
 import ilog.cplex.IloCplex;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 public class Main {
 
-    public static void main(String[] args) throws IloException {
+    public static void main(String[] args) throws IloException, IOException {
 
 
         Data data = new Data("./Data//InputData.xlsm");
@@ -20,6 +23,8 @@ public class Main {
         System.out.println(String.valueOf(solve));
         System.out.println(String.valueOf(module.cplex.getObjValue()));
         data.WriteData(module);
+        Desktop.getDesktop().open(new File("./Data//InputData.xlsm"));
+
     }
 
 }

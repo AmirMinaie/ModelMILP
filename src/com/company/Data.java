@@ -71,9 +71,9 @@ public class Data {
     public HashMapAmir<String, Double> L1 = new HashMapAmir<>(1, "L1");
     public HashMapAmir<String, Double> L2 = new HashMapAmir<>(1, "L2");
     public HashMapAmir<String, Double> DE = new HashMapAmir<>(2, "DE");
-    public HashMapAmir<String, Double> RE = new HashMapAmir<>(1, "DE");
-    public HashMapAmir<String, Double> CU = new HashMapAmir<>(1, "DE");
-    public HashMapAmir<String, Double> BE = new HashMapAmir<>(1, "DE");
+    public HashMapAmir<String, Double> RE = new HashMapAmir<>(1, "RE");
+    public HashMapAmir<String, Double> CU = new HashMapAmir<>(1, "CU");
+    public HashMapAmir<String, Double> BE = new HashMapAmir<>(2, "BE");
     //endregion
 
     public Data(String FilePath) {
