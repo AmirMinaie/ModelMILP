@@ -15,18 +15,20 @@ public class Main {
 
     public static void main(String[] args) throws IloException, IOException {
 
+        System.out.println("Enter File Path:");
         Scanner scanner = new Scanner(System.in);
         String filePath = scanner.nextLine();
-        if (filePath.length()<1)
+        if (filePath.length() < 1)
             filePath = "./Data//InputData.xlsm";
 
         Data data = new Data(filePath);
         Module module = new Module(data);
         boolean solve = module.cplex.solve();
         module.SetAmount(solve);
-        module.cplex.exportModel("m.lp");
+        module.cplex.exportModel("./Data//m.lp");
         System.out.println(String.valueOf(solve));
-        System.out.println(String.valueOf(module.cplex.getObjValue()));
+        if (solve)
+            System.out.println(String.valueOf(module.cplex.getObjValue()));
         data.WriteData(module);
         Desktop.getDesktop().open(new File(filePath));
 

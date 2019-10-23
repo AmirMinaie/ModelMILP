@@ -38,8 +38,15 @@ public class HashMapAmir<K, V> {
 
 
     public V get(K... Key) {
-        if (Key.length != this.numberKey)
-            throw new NullPointerException();
+
+
+        if (Key.length != this.numberKey) {
+            String E = name + "(";
+            for (int i = 0; i < Key.length - 1; i++)
+                E += Key[i] + ",";
+            E += Key[Key.length - 1] + ")";
+            throw new IllegalArgumentException("not Equal number key and legheth key:" + E);
+        }
 
         for (MapAmir m : values) {
             boolean b = true;
@@ -54,7 +61,16 @@ public class HashMapAmir<K, V> {
                 return (V) m.getValue();
 
         }
-        throw new NullPointerException();
+
+        String E = name + "(";
+        for (int i = 0; i < Key.length - 1; i++)
+            E += Key[i] + ",";
+        E += Key[Key.length - 1] + ")";
+
+        //region throw Exception
+        throw new IllegalArgumentException("Parametr: " + E);
+        //endregion
+
     }
 
     public Object gets(String... Key) {

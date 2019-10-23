@@ -107,31 +107,31 @@ public class Module {
                 for (int f = 0; f < data.f; f++)
                     for (int ho = 0; ho < data.ho; ho++)
                         for (int o = 0; o < data.o; o++)
-                            Exp.addTerm(FF.get("f" + f, "h" + ho, "o" + o, "t" + t), data.FA.get("f" + f, "h" + ho, "t" + t, "o" + o));
+                            Exp.addTerm(FF.get("f" + f, "h" + ho, "o" + o, "t" + t), data.FA.get( "h" + ho, "t" + t, "o" + o));
 
                 for (int i = 0; i < data.i; i++)
                     for (int hi = 0; hi < data.hi; hi++)
-                        Exp.addTerm(WH.get("i" + i, "h" + hi, "t" + t), data.FW.get("i" + i, "h" + hi, "t" + t));
+                        Exp.addTerm(WH.get("i" + i, "h" + hi, "t" + t), data.FW.get( "h" + hi, "t" + t));
 
 
                 for (int d = 0; d < data.d; d++)
                     for (int hd = 0; hd < data.hd; hd++)
                         Exp.addTerm(
-                                DA.get("d" + d, "h" + hd, "t" + t), data.FD.get("d" + d, "h" + hd, "t" + t));
+                                DA.get("d" + d, "h" + hd, "t" + t), data.FD.get( "h" + hd, "t" + t));
 
                 for (int n = 0; n < data.n; n++)
                     for (int hn = 0; hn < data.hd; hn++)
-                        Exp.addTerm(RF.get("n" + n, "h" + hn, "t" + t), data.FR.get("n" + n, "h" + hn, "t" + t));
+                        Exp.addTerm(RF.get("n" + n, "h" + hn, "t" + t), data.FR.get( "h" + hn, "t" + t));
 
                 for (int m = 0; m < data.m; m++)
                     for (int hm = 0; hm < data.hm; hm++)
                         Exp.addTerm(RM.get("m" + m, "h" + hm, "t" + t)
-                                , data.FM.get("m" + m, "h" + hm, "t" + t));
+                                , data.FM.get( "h" + hm, "t" + t));
 
                 for (int q = 0; q < data.q; q++)
                     for (int hq = 0; hq < data.hq; hq++)
                         Exp.addTerm(Q.get("q" + q, "h" + hq, "t" + t)
-                                , data.FQ.get("q" + q, "h" + hq, "t" + t));
+                                , data.FQ.get( "h" + hq, "t" + t));
 
                 constraints.get(constraints.size() - 1).add(cplex.addEq(Exp, 0, GenConstrint((constraints.size() + 1), "t", t)));
             }
@@ -807,7 +807,7 @@ public class Module {
                     for (int h = 0; h < data.ho; h++)
                         for (int o = 0; o < data.o; o++)
                             for (int tf = 0; tf <= t; tf++) {
-                                Exp28.addTerm(-1 * data.CO.get("ho" + h, "o" + o),
+                                Exp28.addTerm(-1 * data.CO.get("h" + h, "o" + o),
                                         FF.get("f" + f, "h" + h, "o" + o, "t" + tf));
                             }
                     constraints.get(constraints.size() - 1).add(cplex.addLe(Exp28, 0, GenConstrint((constraints.size() + 1), "q", counter)));
@@ -961,7 +961,7 @@ public class Module {
             for (int m = 0; m < data.m; m++) {
                 IloLinearNumExpr Exp41 = cplex.linearNumExpr();
 
-                for (int h = 0; h < data.hn; h++)
+                for (int h = 0; h < data.hm; h++)
                     for (int t = 0; t < data.t; t++)
                         Exp41.addTerm(1, RM.get("m" + m, "h" + h, "t" + t));
 

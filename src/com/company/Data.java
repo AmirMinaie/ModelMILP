@@ -40,12 +40,12 @@ public class Data {
     //endregion
 
     //region Parameter
-    public HashMapAmir<String, Double> FA = new HashMapAmir<String, Double>(4, "FA");
-    public HashMapAmir<String, Double> FW = new HashMapAmir<String, Double>(3, "FW");
-    public HashMapAmir<String, Double> FD = new HashMapAmir<String, Double>(3, "FD");
-    public HashMapAmir<String, Double> FR = new HashMapAmir<String, Double>(3, "FR");
-    public HashMapAmir<String, Double> FM = new HashMapAmir<String, Double>(3, "FM");
-    public HashMapAmir<String, Double> FQ = new HashMapAmir<String, Double>(3, "FQ");
+    public HashMapAmir<String, Double> FA = new HashMapAmir<String, Double>(3, "FA");
+    public HashMapAmir<String, Double> FW = new HashMapAmir<String, Double>(2, "FW");
+    public HashMapAmir<String, Double> FD = new HashMapAmir<String, Double>(2, "FD");
+    public HashMapAmir<String, Double> FR = new HashMapAmir<String, Double>(2, "FR");
+    public HashMapAmir<String, Double> FM = new HashMapAmir<String, Double>(2, "FM");
+    public HashMapAmir<String, Double> FQ = new HashMapAmir<String, Double>(2, "FQ");
     public HashMapAmir<String, Double> DS = new HashMapAmir<String, Double>(2, "DS");
     public HashMapAmir<String, Double> C = new HashMapAmir<>(2, "C");
     public HashMapAmir<String, Double> CJ = new HashMapAmir<String, Double>(3, "cj");
