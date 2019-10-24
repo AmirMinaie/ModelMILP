@@ -74,11 +74,21 @@ public class Data {
     public HashMapAmir<String, Double> RE = new HashMapAmir<>(1, "RE");
     public HashMapAmir<String, Double> CU = new HashMapAmir<>(1, "CU");
     public HashMapAmir<String, Double> BE = new HashMapAmir<>(2, "BE");
+    public HashMapAmir<String, Double> par = new HashMapAmir<>(1, "par");
+
+    private boolean SaveZero;
     //endregion
 
-    public Data(String FilePath) {
+    public Data(String FilePath, boolean saveZero) {
+        this.SaveZero = saveZero;
         this.FilePath = FilePath;
     }
+
+    public Data(String FilePath) {
+        this.SaveZero = false;
+        this.FilePath = FilePath;
+    }
+
 
     public void ReadData() {
         try {
@@ -261,7 +271,9 @@ public class Data {
                             case "CU":
                                 read(CU, ii, sheet);
                                 break;
-
+                            case "PA":
+                                read(par, ii, sheet);
+                                break;
                         }
                     }
                 }
@@ -277,6 +289,7 @@ public class Data {
     }
 
     public void WriteData(Module module) {
+        this.SaveZero=par.get("q0").equals(1.0);
         FileInputStream fis = null;
         Workbook wb = null;
         FileOutputStream fos = null;
@@ -360,16 +373,30 @@ public class Data {
         row.createCell(c).setCellValue(ff.getName());
 
         int r = 1;
-        for (MapAmir m :
-                ff.getValus()) {
-            for (int i = 0; i < m.getKey().length; i++) {
-                row = sheet.getRow(r);
-                if (row == null)
-                    row = sheet.createRow(r);
-                row.createCell(i + c).setCellValue(m.getKey()[i] + "");
+        for (MapAmir m : ff.getValus()) {
+            if (this.SaveZero) {
+                for (int i = 0; i < m.getKey().length; i++) {
+                    row = sheet.getRow(r);
+                    if (row == null)
+                        row = sheet.createRow(r);
+                    row.createCell(i + c).setCellValue(m.getKey()[i] + "");
+                }
+                sheet.getRow(r).createCell(c + m.getKey().length).setCellValue(m.getAmount());
+
+                r++;
+            } else {
+                if (m.getAmount() != 0) {
+                    for (int i = 0; i < m.getKey().length; i++) {
+                        row = sheet.getRow(r);
+                        if (row == null)
+                            row = sheet.createRow(r);
+                        row.createCell(i + c).setCellValue(m.getKey()[i] + "");
+                    }
+                    sheet.getRow(r).createCell(c + m.getKey().length).setCellValue(m.getAmount());
+
+                    r++;
+                }
             }
-            sheet.getRow(r).createCell(c + m.getKey().length).setCellValue(m.getAmount());
-            r++;
         }
     }
 
