@@ -289,7 +289,7 @@ public class Data {
     }
 
     public void WriteData(Module module) {
-        this.SaveZero=par.get("q0").equals(1.0);
+        this.SaveZero = par.get("q0").equals(1.0);
         FileInputStream fis = null;
         Workbook wb = null;
         FileOutputStream fos = null;
@@ -385,7 +385,7 @@ public class Data {
 
                 r++;
             } else {
-                if (m.getAmount() != 0) {
+                if (Math.round(m.getAmount()) != 0) {
                     for (int i = 0; i < m.getKey().length; i++) {
                         row = sheet.getRow(r);
                         if (row == null)

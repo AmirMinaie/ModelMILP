@@ -11,12 +11,11 @@ public class Main {
 
     public static void main(String[] args) throws IloException, IOException {
 
-        PrintStream fileOut = new PrintStream("./out.txt");
+        PrintStream fileOut = new PrintStream("./Data//out.txt");
         System.setOut(fileOut);
 
         String filePath = "";
         filePath = "./Data//InputData.xlsm";
-        System.out.println("aaa");
         Data data = new Data(filePath);
         Module module = new Module(data);
         boolean solve = module.cplex.solve();
