@@ -11,8 +11,7 @@ public class Main {
 
     public static void main(String[] args) throws IloException, IOException {
 
-        PrintStream fileOut = new PrintStream("./Data//out.txt");
-        System.setOut(fileOut);
+        System.setOut(new LogStreamAmir(System.out, new PrintStream("./Data//out.txt")));
 
         String filePath = "";
         filePath = "./Data//InputData.xlsm";
