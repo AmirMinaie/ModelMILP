@@ -44,7 +44,7 @@ public class Module {
     public HashMapAmir<String, IloNumVar> P;
     public HashMapAmir<String, IloNumVar> At;
     public HashMapAmir<String, IloNumVar> W;
-    public Double BN = Double.MAX_VALUE;
+    public Double BN = Math.pow(10,10);
     public IloCplex cplex;
     public IloLinearNumExpr obj;
     //endregion
@@ -58,7 +58,6 @@ public class Module {
         initVariables();
         initConstraints();
     }
-
 
     public void initConstraints() {
         try {
@@ -81,7 +80,7 @@ public class Module {
             Con2.addTerm(-1, NTC.get("q0"));
 
             constraints.add(new ArrayList<>());
-            constraints.get(constraints.size() - 1).add(cplex.addEq(Con2, 0, "constraint_" + (constraints.size() + 1)));
+            constraints.get(constraints.size() - 1).add(cplex.addEq(Con2, 0, GenConstrint(constraints.size() + 1)));
             //endregion
 
             //region 3
@@ -95,7 +94,7 @@ public class Module {
             }
 
             constraints.add(new ArrayList<>());
-            constraints.get(constraints.size() - 1).add(cplex.addEq(Con3, 0, "constraint_" + (constraints.size() + 1)));
+            constraints.get(constraints.size() - 1).add(cplex.addEq(Con3, 0, GenConstrint(constraints.size() + 1)));
             //endregion
 
             //region 4
@@ -106,32 +105,33 @@ public class Module {
 
                 for (int f = 0; f < data.f; f++)
                     for (int ho = 0; ho < data.ho; ho++)
-                        for (int o = 0; o < data.o; o++)
-                            Exp.addTerm(FF.get("f" + f, "h" + ho, "o" + o, "t" + t), data.FA.get( "h" + ho, "t" + t, "o" + o));
+                        for (int p = 0; p < data.p; p++)
+                            for (int o = 0; o < data.o; o++)
+                                Exp.addTerm(FF.get("f" + f, "h" + ho, "o" + o, "t" + t, "p" + p), data.FA.get("h" + ho, "t" + t, "o" + o, "p" + p));
 
                 for (int i = 0; i < data.i; i++)
                     for (int hi = 0; hi < data.hi; hi++)
-                        Exp.addTerm(WH.get("i" + i, "h" + hi, "t" + t), data.FW.get( "h" + hi, "t" + t));
+                        Exp.addTerm(WH.get("i" + i, "h" + hi, "t" + t), data.FW.get("h" + hi, "t" + t));
 
 
                 for (int d = 0; d < data.d; d++)
                     for (int hd = 0; hd < data.hd; hd++)
                         Exp.addTerm(
-                                DA.get("d" + d, "h" + hd, "t" + t), data.FD.get( "h" + hd, "t" + t));
+                                DA.get("d" + d, "h" + hd, "t" + t), data.FD.get("h" + hd, "t" + t));
 
                 for (int n = 0; n < data.n; n++)
                     for (int hn = 0; hn < data.hd; hn++)
-                        Exp.addTerm(RF.get("n" + n, "h" + hn, "t" + t), data.FR.get( "h" + hn, "t" + t));
+                        Exp.addTerm(RF.get("n" + n, "h" + hn, "t" + t), data.FR.get("h" + hn, "t" + t));
 
                 for (int m = 0; m < data.m; m++)
                     for (int hm = 0; hm < data.hm; hm++)
                         Exp.addTerm(RM.get("m" + m, "h" + hm, "t" + t)
-                                , data.FM.get( "h" + hm, "t" + t));
+                                , data.FM.get("h" + hm, "t" + t));
 
                 for (int q = 0; q < data.q; q++)
                     for (int hq = 0; hq < data.hq; hq++)
                         Exp.addTerm(Q.get("q" + q, "h" + hq, "t" + t)
-                                , data.FQ.get( "h" + hq, "t" + t));
+                                , data.FQ.get("h" + hq, "t" + t));
 
                 constraints.get(constraints.size() - 1).add(cplex.addEq(Exp, 0, GenConstrint((constraints.size() + 1), "t", t)));
             }
@@ -144,90 +144,89 @@ public class Module {
 
             for (int t = 0; t < data.t; t++) {
                 double tr = Math.pow((1 + data.R.get("r0")), -1 * t);
-                for (int k = 0; k < data.k; k++) {
+                for (int p = 0; p < data.p; p++)
+                    for (int k = 0; k < data.k; k++) {
 
-                    for (int j = 0; j < data.j; j++)
-                        for (int s = 0; s < data.s; s++)
-                            for (int f = 0; f < data.f; f++)
+                        for (int j = 0; j < data.j; j++)
+                            for (int s = 0; s < data.s; s++)
+                                for (int f = 0; f < data.f; f++)
 
-                                Exp5.addTerm(XM.get("j" + j, "s" + s, "f" + f, "t" + t, "k" + k),
-                                        tr * data.CJ.get("j" + j, "k" + k, "t" + t) *
-                                                data.DS.get("s" + s, "f" + f));
+                                    Exp5.addTerm(XM.get("j" + j, "s" + s, "f" + f, "t" + t, "k" + k),
+                                            tr * data.C.get("j" + j, "k" + k, "t" + t) *
+                                                    data.DS.get("s" + s, "f" + f));
 
-                    for (int f = 0; f < data.f; f++)
+                        for (int f = 0; f < data.f; f++)
+                            for (int i = 0; i < data.i; i++)
+                                Exp5.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k, "p" + p),
+                                        tr * data.C.get("k" + k, "t" + t, "p" + p) *
+                                                data.DS.get("f" + f, "i" + i));
+
                         for (int i = 0; i < data.i; i++)
+                            for (int z = 0; z < data.z; z++) {
 
-                            Exp5.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k),
-                                    tr * data.C.get("k" + k, "t" + t) *
-                                            data.DS.get("f" + f, "i" + i));
+                                Exp5.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p),
+                                        tr * data.C.get("k" + k, "t" + t, "p" + p) *
+                                                data.DS.get("i" + i, "z" + z));
 
-                    for (int i = 0; i < data.i; i++)
-                        for (int z = 0; z < data.z; z++) {
+                                Exp5.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p),
+                                        tr * data.C.get("k" + k, "t" + t, "p" + p) *
+                                                data.DS.get("i" + i, "z" + z));
+                            }
 
-                            Exp5.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k),
-                                    tr * data.C.get("k" + k, "t" + t) *
-                                            data.DS.get("i" + i, "z" + z));
+                        for (int i = 0; i < data.i; i++)
+                            for (int d = 0; d < data.d; d++)
+                                Exp5.addTerm(X.get("i" + i, "d" + d, "t" + t, "k" + k, "p" + p),
+                                        tr * data.C.get("k" + k, "t" + t, "p" + p) *
+                                                data.DS.get("i" + i, "d" + d));
 
-                            Exp5.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k),
-                                    tr * data.C.get("k" + k, "t" + t) *
-                                            data.DS.get("i" + i, "z" + z));
+                        for (int i = 0; i < data.i; i++)
+                            for (int n = 0; n < data.n; n++) {
+
+                                Exp5.addTerm(X.get("i" + i, "n" + n, "t" + t, "k" + k, "p" + p),
+                                        tr * data.C.get("k" + k, "t" + t, "p" + p) *
+                                                data.DS.get("i" + i, "n" + n));
+
+                                Exp5.addTerm(X.get("n" + n, "i" + i, "t" + t, "k" + k, "p" + p),
+                                        tr * data.C.get("k" + k, "t" + t, "p" + p) *
+                                                data.DS.get("i" + i, "n" + n));
+                            }
+
+                        for (int i = 0; i < data.i; i++)
+                            for (int m = 0; m < data.m; m++) {
+                                Exp5.addTerm(X.get("i" + i, "m" + m, "t" + t, "k" + k, "p" + p),
+                                        tr * data.C.get("k" + k, "t" + t, "p" + p) *
+                                                data.DS.get("i" + i, "m" + m));
+
+                                Exp5.addTerm(X.get("m" + m, "i" + i, "t" + t, "k" + k, "p" + p),
+                                        tr * data.C.get("k" + k, "t" + t, "p" + p) *
+                                                data.DS.get("i" + i, "m" + m));
+                            }
+
+                        for (int j = 0; j < data.j; j++) {
+                            for (int d = 0; d < data.d; d++) {
+
+                                for (int f = 0; f < data.f; f++)
+                                    Exp5.addTerm(XM.get("j" + j, "d" + d, "f" + f, "t" + t, "k" + k),
+                                            tr * data.C.get("j" + j, "k" + k, "t" + t) *
+                                                    data.DS.get("d" + d, "f" + f));
+
+                                for (int q = 0; q < data.q; q++)
+                                    Exp5.addTerm(XM.get("j" + j, "d" + d, "q" + q, "t" + t, "k" + k),
+                                            tr * data.C.get("j" + j, "k" + k, "t" + t) *
+                                                    data.DS.get("d" + d, "q" + q));
+
+
+                            }
+
+                            for (int s = 0; s < data.s; s++)
+                                for (int m = 0; m < data.m; m++)
+                                    Exp5.addTerm(XM.get("j" + j, "s" + s, "m" + m, "t" + t, "k" + k),
+                                            tr * data.C.get("j" + j, "k" + k, "t" + t) *
+                                                    data.DS.get("s" + s, "m" + m));
                         }
-
-                    for (int i = 0; i < data.i; i++)
-                        for (int d = 0; d < data.d; d++)
-
-                            Exp5.addTerm(X.get("i" + i, "d" + d, "t" + t, "k" + k),
-                                    tr * data.C.get("k" + k, "t" + t) *
-                                            data.DS.get("i" + i, "d" + d));
-
-                    for (int i = 0; i < data.i; i++)
-                        for (int n = 0; n < data.n; n++) {
-
-                            Exp5.addTerm(X.get("i" + i, "n" + n, "t" + t, "k" + k),
-                                    tr * data.C.get("k" + k, "t" + t) *
-                                            data.DS.get("i" + i, "n" + n));
-
-                            Exp5.addTerm(X.get("n" + n, "i" + i, "t" + t, "k" + k),
-                                    tr * data.C.get("k" + k, "t" + t) *
-                                            data.DS.get("i" + i, "n" + n));
-                        }
-
-                    for (int i = 0; i < data.i; i++)
-                        for (int m = 0; m < data.m; m++) {
-                            Exp5.addTerm(X.get("i" + i, "m" + m, "t" + t, "k" + k),
-                                    tr * data.C.get("k" + k, "t" + t) *
-                                            data.DS.get("i" + i, "m" + m));
-
-                            Exp5.addTerm(X.get("m" + m, "i" + i, "t" + t, "k" + k),
-                                    tr * data.C.get("k" + k, "t" + t) *
-                                            data.DS.get("i" + i, "m" + m));
-                        }
-
-                    for (int j = 0; j < data.j; j++) {
-                        for (int d = 0; d < data.d; d++) {
-
-                            for (int f = 0; f < data.f; f++)
-                                Exp5.addTerm(XM.get("j" + j, "d" + d, "f" + f, "t" + t, "k" + k),
-                                        tr * data.CJ.get("j" + j, "k" + k, "t" + t) *
-                                                data.DS.get("d" + d, "f" + f));
-
-                            for (int q = 0; q < data.q; q++)
-                                Exp5.addTerm(XM.get("j" + j, "d" + d, "q" + q, "t" + t, "k" + k),
-                                        tr * data.CJ.get("j" + j, "k" + k, "t" + t) *
-                                                data.DS.get("d" + d, "q" + q));
-
-
-                        }
-
-                        for (int s = 0; s < data.s; s++)
-                            for (int m = 0; m < data.m; m++)
-                                Exp5.addTerm(XM.get("j" + j, "s" + s, "m" + m, "t" + t, "k" + k),
-                                        tr * data.CJ.get("j" + j, "k" + k, "t" + t) *
-                                                data.DS.get("s" + s, "m" + m));
                     }
-                }
             }
-            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp5, 0, "constraint_" + (constraints.size() + 1)));
+            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp5, 0, GenConstrint(constraints.size() + 1)));
             //endregion
 
             //region 6
@@ -235,43 +234,44 @@ public class Module {
             IloLinearNumExpr EXP6 = cplex.linearNumExpr();
             EXP6.addTerm(TOC.get("q0"), -1);
 
-            for (int t = 0; t < data.t; t++) {
+            for (int t = 0; t < data.t; t++)
+                for (int p = 0; p < data.p; p++) {
 
-                double rt = Math.pow(1 + data.R.get("r0"), -1 * t);
+                    double rt = Math.pow(1 + data.R.get("r0"), -1 * t);
 
-                for (int f = 0; f < data.f; f++)
-                    for (int o = 0; o < data.o; o++)
-                        EXP6.addTerm(P.get("f" + f, "o" + o, "t" + t),
-                                data.OC.get("o" + o, "t" + t) * rt);
+                    for (int f = 0; f < data.f; f++)
+                        for (int o = 0; o < data.o; o++)
+                            EXP6.addTerm(P.get("f" + f, "o" + o, "t" + t, "p" + p),
+                                    data.OC.get("o" + o, "t" + t, "p" + p) * rt);
 
-                for (int i = 0; i < data.i; i++)
-                    for (int k = 0; k < data.k; k++) {
+                    for (int i = 0; i < data.i; i++)
+                        for (int k = 0; k < data.k; k++) {
 
-                        for (int z = 0; z < data.z; z++) {
-                            EXP6.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k), rt * data.OCI.get("t" + t));
-                            EXP6.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k), rt * data.OCI.get("t" + t));
-                            EXP6.addTerm(Sh.get("i" + i, "t" + t), rt * data.OCI.get("t" + t));
-                            EXP6.addTerm(Sm.get("i" + i, "t" + t), rt * data.OCI.get("t" + t));
-                            EXP6.addTerm(Sl.get("i" + i, "t" + t), rt * data.OCI.get("t" + t));
-                            EXP6.addTerm(Sn.get("i" + i, "t" + t), rt * data.OCI.get("t" + t));
+                            for (int z = 0; z < data.z; z++) {
+                                EXP6.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p), rt * data.OCI.get("t" + t, "p" + p));
+                                EXP6.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p), rt * data.OCI.get("t" + t, "p" + p));
+                                EXP6.addTerm(Sh.get("i" + i, "t" + t, "p" + p), rt * data.OCI.get("t" + t, "p" + p));
+                                EXP6.addTerm(Sm.get("i" + i, "t" + t, "p" + p), rt * data.OCI.get("t" + t, "p" + p));
+                                EXP6.addTerm(Sl.get("i" + i, "t" + t, "p" + p), rt * data.OCI.get("t" + t, "p" + p));
+                                EXP6.addTerm(Sn.get("i" + i, "t" + t, "p" + p), rt * data.OCI.get("t" + t, "p" + p));
+                            }
+
+                            for (int d = 0; d < data.d; d++)
+                                EXP6.addTerm(X.get("i" + i, "d" + d, "t" + t, "k" + k, "p" + p),
+                                        rt * data.OCD.get("t" + t, "p" + p));
+
+                            for (int n = 0; n < data.n; n++)
+                                EXP6.addTerm(X.get("i" + i, "n" + n, "t" + t, "k" + k, "p" + p),
+                                        rt * data.OCN.get("t" + t, "p" + p));
+
+                            for (int m = 0; m < data.m; m++)
+                                EXP6.addTerm(X.get("i" + i, "m" + m, "t" + t, "k" + k, "p" + p),
+                                        rt * data.OCM.get("t" + t, "p" + p));
+
                         }
+                }
 
-                        for (int d = 0; d < data.d; d++)
-                            EXP6.addTerm(X.get("i" + i, "d" + d, "t" + t, "k" + k),
-                                    rt * data.OCD.get("t" + t));
-
-                        for (int n = 0; n < data.n; n++)
-                            EXP6.addTerm(X.get("i" + i, "n" + n, "t" + t, "k" + k),
-                                    rt * data.OCN.get("t" + t));
-
-                        for (int m = 0; m < data.m; m++)
-                            EXP6.addTerm(X.get("i" + i, "m" + m, "t" + t, "k" + k),
-                                    rt * data.OCM.get("t" + t));
-
-                    }
-            }
-
-            constraints.get(constraints.size() - 1).add(cplex.addEq(EXP6, 0, "constraint_" + (constraints.size() + 1)));
+            constraints.get(constraints.size() - 1).add(cplex.addEq(EXP6, 0, GenConstrint(constraints.size() + 1)));
             //endregion
 
             //region 7
@@ -282,6 +282,7 @@ public class Module {
 
             for (int t = 0; t < data.t; t++)
                 for (int k = 0; k < data.k; k++) {
+
                     double tr = Math.pow(1 + data.R.get("r0"), -1 * t);
                     for (int j = 0; j < data.j; j++)
                         for (int s = 0; s < data.s; s++) {
@@ -293,17 +294,19 @@ public class Module {
                                 Exp7.addTerm(XM.get("j" + j, "s" + s, "m" + m, "t" + t, "k" + k),
                                         tr * data.PS.get("j" + j, "s" + s, "t" + t));
                         }
+                    for (int p = 0; p < data.p; p++) {
 
-                    double pw = data.PZ1.get("t" + t) * data.L1.get("l0")
-                            + data.PZ2.get("t" + t) * data.L2.get("l0")
-                            + data.PZ3.get("t" + t) * (1 - data.L2.get("l0") - data.L1.get("l0"));
-                    for (int i = 0; i < data.i; i++)
-                        for (int z = 0; z < data.z; z++)
-                            Exp7.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k),
-                                    pw * tr);
+                        double pw = data.PG.get("t" + t, "p" + p) * data.L1.get("p" + p)
+                                + data.PM.get("t" + t, "p" + p) * data.L2.get("p" + p)
+                                + data.PB.get("t" + t, "p" + p) * (1 - data.L2.get("p" + p) - data.L1.get("p" + p));
 
+                        for (int i = 0; i < data.i; i++)
+                            for (int z = 0; z < data.z; z++)
+                                Exp7.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p),
+                                        pw * tr);
+                    }
                 }
-            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp7, 0, "constraint_" + (constraints.size() + 1)));
+            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp7, 0, GenConstrint(constraints.size() + 1)));
 
             //endregion
 
@@ -317,9 +320,10 @@ public class Module {
                 for (int k = 0; k < data.k; k++) {
 
                     for (int i = 0; i < data.i; i++)
-                        for (int z = 0; z < data.z; z++)
-                            Exp8.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k)
-                                    , tr * data.PZ.get("t" + t));
+                        for (int p = 0; p < data.p; p++)
+                            for (int z = 0; z < data.z; z++)
+                                Exp8.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p)
+                                        , tr * data.PZ.get("t" + t, "p" + p));
 
                     for (int j = 0; j < data.j; j++)
                         for (int d = 0; d < data.d; d++)
@@ -331,15 +335,14 @@ public class Module {
                 }
             }
 
-            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp8, 0, "constraint_" + (constraints.size() + 1)));
+            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp8, 0, GenConstrint(constraints.size() + 1)));
             //endregion
 
             //region 9
             constraints.add(new ArrayList<>());
             for (int t = 0; t < data.t; t++) {
-
                 constraints.get(constraints.size() - 1).add(cplex.addEq(cplex.sum(TEN.get("t" + t), PEN.get("t" + t), cplex.prod(-1, EN.get("t" + t)))
-                        , 0, "constraint_" + (constraints.size() + 1)));
+                        , 0, GenConstrint((constraints.size() + 1), "t", t)));
             }
             //endregion
 
@@ -349,73 +352,74 @@ public class Module {
                 IloLinearNumExpr Exp10 = cplex.linearNumExpr();
                 Exp10.addTerm(-1, TEN.get("t" + t));
 
-                for (int k = 0; k < data.k; k++) {
+                for (int k = 0; k < data.k; k++)
+                    for (int p = 0; p < data.p; p++) {
 
-                    for (int j = 0; j < data.j; j++) {
-                        for (int s = 0; s < data.s; s++)
-                            for (int f = 0; f < data.f; f++)
-                                Exp10.addTerm(XM.get("j" + j, "s" + s, "f" + f, "t" + t, "k" + k)
-                                        , data.A.get("k" + k) * data.DS.get("s" + s, "f" + f));
+                        for (int j = 0; j < data.j; j++) {
+                            for (int s = 0; s < data.s; s++)
+                                for (int f = 0; f < data.f; f++)
+                                    Exp10.addTerm(XM.get("j" + j, "s" + s, "f" + f, "t" + t, "k" + k)
+                                            , data.ER.get("k" + k, "j" + j) * data.DS.get("s" + s, "f" + f));
 
-                        for (int d = 0; d < data.d; d++)
-                            for (int f = 0; f < data.f; f++)
-                                Exp10.addTerm(XM.get("j" + j, "d" + d, "f" + f, "t" + t, "k" + k)
-                                        , data.A.get("k" + k) * data.DS.get("d" + d, "f" + f));
+                            for (int d = 0; d < data.d; d++)
+                                for (int f = 0; f < data.f; f++)
+                                    Exp10.addTerm(XM.get("j" + j, "d" + d, "f" + f, "t" + t, "k" + k)
+                                            , data.ER.get("k" + k, "j" + j) * data.DS.get("d" + d, "f" + f));
 
-                        for (int d = 0; d < data.d; d++)
-                            for (int q = 0; q < data.q; q++)
-                                Exp10.addTerm(XM.get("j" + j, "d" + d, "q" + q, "t" + t, "k" + k)
-                                        , data.A.get("k" + k) * data.DS.get("d" + d, "q" + q));
+                            for (int d = 0; d < data.d; d++)
+                                for (int q = 0; q < data.q; q++)
+                                    Exp10.addTerm(XM.get("j" + j, "d" + d, "q" + q, "t" + t, "k" + k)
+                                            , data.ER.get("k" + k, "j" + j) * data.DS.get("d" + d, "q" + q));
 
-                        for (int s = 0; s < data.s; s++)
-                            for (int m = 0; m < data.m; m++)
-                                Exp10.addTerm(XM.get("j" + j, "s" + s, "m" + m, "t" + t, "k" + k)
-                                        , data.A.get("k" + k) * data.DS.get("s" + s, "m" + m));
+                            for (int s = 0; s < data.s; s++)
+                                for (int m = 0; m < data.m; m++)
+                                    Exp10.addTerm(XM.get("j" + j, "s" + s, "m" + m, "t" + t, "k" + k)
+                                            , data.ER.get("k" + k, "j" + j) * data.DS.get("s" + s, "m" + m));
+
+                        }
+
+                        for (int f = 0; f < data.f; f++)
+                            for (int i = 0; i < data.i; i++)
+                                Exp10.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k, "p" + p),
+                                        data.ER.get("k" + k, "p" + p) * data.DS.get("f" + f, "i" + i));
+
+
+                        for (int i = 0; i < data.i; i++)
+                            for (int z = 0; z < data.z; z++) {
+                                Exp10.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p),
+                                        data.ER.get("k" + k, "p" + p) * data.DS.get("i" + i, "z" + z));
+
+                                Exp10.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p),
+                                        data.ER.get("k" + k, "p" + p) * data.DS.get("i" + i, "z" + z));
+
+                            }
+
+                        for (int i = 0; i < data.i; i++)
+                            for (int d = 0; d < data.d; d++)
+                                Exp10.addTerm(X.get("i" + i, "d" + d, "t" + t, "k" + k, "p" + p),
+                                        data.ER.get("k" + k, "p" + p) * data.DS.get("i" + i, "d" + d));
+
+                        for (int i = 0; i < data.i; i++)
+                            for (int n = 0; n < data.n; n++) {
+                                Exp10.addTerm(X.get("i" + i, "n" + n, "t" + t, "k" + k, "p" + p),
+                                        data.ER.get("k" + k, "p" + p) * data.DS.get("i" + i, "n" + n));
+                                Exp10.addTerm(X.get("n" + n, "i" + i, "t" + t, "k" + k, "p" + p),
+                                        data.ER.get("k" + k, "p" + p) * data.DS.get("i" + i, "n" + n));
+
+                            }
+
+                        for (int i = 0; i < data.i; i++)
+                            for (int m = 0; m < data.m; m++) {
+                                Exp10.addTerm(X.get("i" + i, "m" + m, "t" + t, "k" + k, "p" + p),
+                                        data.ER.get("k" + k, "p" + p) * data.DS.get("i" + i, "m" + m));
+
+                                Exp10.addTerm(X.get("m" + m, "i" + i, "t" + t, "k" + k, "p" + p),
+                                        data.ER.get("k" + k, "p" + p) * data.DS.get("i" + i, "m" + m));
+                            }
 
                     }
 
-                    for (int f = 0; f < data.f; f++)
-                        for (int i = 0; i < data.i; i++)
-                            Exp10.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k),
-                                    data.A.get("k" + k) * data.DS.get("f" + f, "i" + i));
-
-
-                    for (int i = 0; i < data.i; i++)
-                        for (int z = 0; z < data.z; z++) {
-                            Exp10.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k),
-                                    data.A.get("k" + k) * data.DS.get("i" + i, "z" + z));
-
-                            Exp10.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k),
-                                    data.A.get("k" + k) * data.DS.get("i" + i, "z" + z));
-
-                        }
-
-                    for (int i = 0; i < data.i; i++)
-                        for (int d = 0; d < data.d; d++)
-                            Exp10.addTerm(X.get("i" + i, "d" + d, "t" + t, "k" + k),
-                                    data.A.get("k" + k) * data.DS.get("i" + i, "d" + d));
-
-                    for (int i = 0; i < data.i; i++)
-                        for (int n = 0; n < data.n; n++) {
-                            Exp10.addTerm(X.get("i" + i, "n" + n, "t" + t, "k" + k),
-                                    data.A.get("k" + k) * data.DS.get("i" + i, "n" + n));
-                            Exp10.addTerm(X.get("n" + n, "i" + i, "t" + t, "k" + k),
-                                    data.A.get("k" + k) * data.DS.get("i" + i, "n" + n));
-
-                        }
-
-                    for (int i = 0; i < data.i; i++)
-                        for (int m = 0; m < data.m; m++) {
-                            Exp10.addTerm(X.get("i" + i, "m" + m, "t" + t, "k" + k),
-                                    data.A.get("k" + k) * data.DS.get("i" + i, "m" + m));
-
-                            Exp10.addTerm(X.get("m" + m, "i" + i, "t" + t, "k" + k),
-                                    data.A.get("k" + k) * data.DS.get("i" + i, "m" + m));
-                        }
-
-                }
-
-                constraints.get(constraints.size() - 1).add(cplex.addEq(Exp10, 0, "constraint_" + (constraints.size() + 1) + "(t" + t + ")"));
+                constraints.get(constraints.size() - 1).add(cplex.addEq(Exp10, 0, GenConstrint(constraints.size() + 1, "t", t)));
             }
             //endregion
 
@@ -427,10 +431,11 @@ public class Module {
                 Exp11.addTerm(PEN.get("t" + t), -1);
 
                 for (int o = 0; o < data.o; o++)
-                    for (int f = 0; f < data.f; f++)
-                        Exp11.addTerm(P.get("f" + f, "o" + o, "t" + t), data.A.get("o" + o));
+                    for (int p = 0; p < data.p; p++)
+                        for (int f = 0; f < data.f; f++)
+                            Exp11.addTerm(P.get("f" + f, "o" + o, "t" + t, "p" + p), data.ER.get("o" + o, "p" + p));
 
-                constraints.get(constraints.size() - 1).add(cplex.addEq(Exp11, 0, "constraint_" + (constraints.size() + 1)));
+                constraints.get(constraints.size() - 1).add(cplex.addEq(Exp11, 0, GenConstrint((constraints.size() + 1), "t", t)));
             }
             //endregion
 
@@ -440,7 +445,7 @@ public class Module {
             Exp12.addTerm(-1, ENCT.get("q0"));
             for (int t = 0; t < data.t; t++)
                 Exp12.addTerm(Math.pow(1 + data.R.get("r0"), -1 * t), ENC.get("t" + t));
-            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp12, 0, "constraint_" + (constraints.size() + 1)));
+            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp12, 0, GenConstrint(constraints.size() + 1)));
             //endregion
 
             //region 13
@@ -453,7 +458,7 @@ public class Module {
                 for (int e = 0; e < data.e; e++)
                     Exp13.addTerm(At.get("e" + e, "t" + t), data.RE.get("e" + e));
 
-                constraints.get(constraints.size() - 1).add(cplex.addEq(Exp13, 0, "constraint_" + (constraints.size() + 1) + "(t" + t + ")"));
+                constraints.get(constraints.size() - 1).add(cplex.addEq(Exp13, 0, GenConstrint(constraints.size() + 1, "t", t)));
             }
             //endregion
 
@@ -466,7 +471,7 @@ public class Module {
                 for (int e = 0; e < data.e; e++)
                     Exp14.addTerm(At.get("e" + e, "t" + t), 1);
 
-                constraints.get(constraints.size() - 1).add(cplex.addEq(Exp14, 0, "constraint_" + (constraints.size() + 1) + "(t" + t + ")"));
+                constraints.get(constraints.size() - 1).add(cplex.addEq(Exp14, 0, GenConstrint(constraints.size() + 1, "t", t)));
             }
             //endregion
 
@@ -475,12 +480,12 @@ public class Module {
             for (int t = 0; t < data.t; t++) {
 
                 constraints.get(constraints.size() - 1).add(cplex.addLe(At.get("e0", "t" + t), data.CU.get("e0"),
-                        "constraint_" + (constraints.size() + 1) + "_0(t" + t + ")"));
+                        GenConstrint(constraints.size() + 1, "0_t", t)));
 
                 IloLinearNumExpr Exp15 = cplex.linearNumExpr();
                 Exp15.addTerm(1, At.get("e0", "t" + t));
                 Exp15.addTerm(-1 * data.CU.get("e0"), W.get("e0", "t" + t));
-                constraints.get(constraints.size() - 1).add(cplex.addLe(0, Exp15, "constraint_" + (constraints.size() + 1) + "_1(t" + t + ")"));
+                constraints.get(constraints.size() - 1).add(cplex.addLe(0, Exp15, GenConstrint(constraints.size() + 1, "1_t", t)));
             }
             //endregion
 
@@ -512,13 +517,15 @@ public class Module {
                 IloLinearNumExpr Exp17 = cplex.linearNumExpr();
                 Exp17.addTerm(-1, At.get("e" + (data.e - 1), "t" + t));
                 Exp17.addTerm(BN, W.get("e" + (data.e - 2), "t" + t));
-                constraints.get(constraints.size() - 1).add(cplex.addGe(Exp17, 0, "constraint_" + (constraints.size() + 1) + "(t" + t + ")"));
+                constraints.get(constraints.size() - 1).add(cplex.addGe(Exp17, 0, GenConstrint(constraints.size() + 1, "t", t)));
             }
             //endregion
 
             //region 18
             constraints.add(new ArrayList<>());
             counter = 0;
+
+
             for (int j = 0; j < data.j; j++)
                 for (int f = 0; f < data.f; f++)
                     for (int t = 0; t < data.t; t++) {
@@ -530,9 +537,9 @@ public class Module {
 
                             for (int d = 0; d < data.d; d++)
                                 Exp18.addTerm(XM.get("j" + j, "d" + d, "f" + f, "t" + t, "k" + k), 1);
-
-                            for (int i = 0; i < data.i; i++)
-                                Exp18.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k), -1 * data.RM.get("j" + j));
+                            for (int p = 0; p < data.p; p++)
+                                for (int i = 0; i < data.i; i++)
+                                    Exp18.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k, "p" + p), -1 * data.RM.get("j" + j, "p" + p));
                         }
                         constraints.get(constraints.size() - 1).add(cplex.addEq(Exp18, 0, GenConstrint((constraints.size() + 1), "q", counter)));
                         counter++;
@@ -546,14 +553,16 @@ public class Module {
                 for (int d = 0; d < data.d; d++) {
                     for (int t = 0; t < data.t; t++) {
                         IloLinearNumExpr Exp19 = cplex.linearNumExpr();
+
                         for (int k = 0; k < data.k; k++) {
                             for (int f = 0; f < data.f; f++)
                                 if (t < data.t - 1)
                                     Exp19.addTerm(1, XM.get("j" + j, "d" + d, "f" + f, "t" + (t + 1), "k" + k));
 
                             for (int i = 0; i < data.i; i++)
-                                Exp19.addTerm(-1 * data.G1.get("j" + j) * data.RM.get("j" + j),
-                                        X.get("i" + i, "d" + d, "t" + t, "k" + k));
+                                for (int p = 0; p < data.p; p++)
+                                    Exp19.addTerm(-1 * data.G.get("j" + j, "p" + p) * data.RM.get("j" + j, "p" + p),
+                                            X.get("i" + i, "d" + d, "t" + t, "k" + k, "p" + p));
 
                         }
                         constraints.get(constraints.size() - 1).add(cplex.addEq(Exp19, 0, GenConstrint((constraints.size() + 1), "q", counter)));
@@ -589,9 +598,10 @@ public class Module {
 
                                 Exp20.addTerm(1, XM.get("j" + j, "d" + d, "q" + q, "t" + (t + 1), "k" + k));
 
-                            for (int i = 0; i < data.i; i++)
-                                Exp20.addTerm(-1 * (1 - data.G1.get("j" + j)) * data.RM.get("j" + j),
-                                        X.get("i" + i, "d" + d, "t" + t, "k" + k));
+                            for (int p = 0; p < data.p; p++)
+                                for (int i = 0; i < data.i; i++)
+                                    Exp20.addTerm(-1 * (1 - data.G.get("j" + j, "p" + p)) * data.RM.get("j" + j, "p" + p),
+                                            X.get("i" + i, "d" + d, "t" + t, "k" + k, "p" + p));
 
                         }
                         constraints.get(constraints.size() - 1).add(cplex.addEq(Exp20, 0, GenConstrint((constraints.size() + 1), "q", counter)));
@@ -608,12 +618,13 @@ public class Module {
                 for (int n = 0; n < data.n; n++) {
 
                     IloLinearNumExpr Exp21 = cplex.linearNumExpr();
-                    for (int k = 0; k < data.k; k++)
-                        for (int i = 0; i < data.i; i++) {
+                    for (int p = 0; p < data.p; p++)
+                        for (int k = 0; k < data.k; k++)
+                            for (int i = 0; i < data.i; i++) {
 
-                            Exp21.addTerm(X.get("i" + i, "n" + n, "t" + t, "k" + k), 1);
-                            Exp21.addTerm(X.get("n" + n, "i" + i, "t" + (t + 1), "k" + k), -1);
-                        }
+                                Exp21.addTerm(X.get("i" + i, "n" + n, "t" + t, "k" + k, "p" + p), 1);
+                                Exp21.addTerm(X.get("n" + n, "i" + i, "t" + (t + 1), "k" + k, "p" + p), -1);
+                            }
                     constraints.get(constraints.size() - 1).add(cplex.addEq(Exp21, 0, GenConstrint((constraints.size() + 1), "q", counter)));
                     counter++;
                 }
@@ -626,10 +637,11 @@ public class Module {
             for (int n = 0; n < data.n; n++) {
 
                 IloLinearNumExpr Exp60 = cplex.linearNumExpr();
-                for (int k = 0; k < data.k; k++)
-                    for (int i = 0; i < data.i; i++) {
-                        Exp60.addTerm(X.get("n" + n, "i" + i, "t0", "k" + k), 1);
-                    }
+                for (int p = 0; p < data.p; p++)
+                    for (int k = 0; k < data.k; k++)
+                        for (int i = 0; i < data.i; i++) {
+                            Exp60.addTerm(X.get("n" + n, "i" + i, "t0", "k" + k, "p" + p), 1);
+                        }
                 constraints.get(constraints.size() - 1).add(cplex.addEq(Exp60, 0, GenConstrint((constraints.size() + 1), "q", counter)));
                 counter++;
             }
@@ -643,10 +655,11 @@ public class Module {
                 for (int m = 0; m < data.m; m++) {
                     IloLinearNumExpr Exp22 = cplex.linearNumExpr();
                     for (int k = 0; k < data.k; k++)
-                        for (int i = 0; i < data.i; i++) {
-                            Exp22.addTerm(X.get("i" + i, "m" + m, "t" + t, "k" + k), 1);
-                            Exp22.addTerm(X.get("m" + m, "i" + i, "t" + (t + 1), "k" + k), -1);
-                        }
+                        for (int p = 0; p < data.p; p++)
+                            for (int i = 0; i < data.i; i++) {
+                                Exp22.addTerm(X.get("i" + i, "m" + m, "t" + t, "k" + k, "p" + p), 1);
+                                Exp22.addTerm(X.get("m" + m, "i" + i, "t" + (t + 1), "k" + k, "p" + p), -1);
+                            }
                     constraints.get(constraints.size() - 1).add(cplex.addEq(Exp22, 0, GenConstrint((constraints.size() + 1), "q", counter)));
                     counter++;
                 }
@@ -659,9 +672,10 @@ public class Module {
             for (int m = 0; m < data.m; m++) {
                 IloLinearNumExpr Exp59 = cplex.linearNumExpr();
                 for (int k = 0; k < data.k; k++)
-                    for (int i = 0; i < data.i; i++) {
-                        Exp59.addTerm(X.get("m" + m, "i" + i, "t0", "k" + k), 1);
-                    }
+                    for (int p = 0; p < data.p; p++)
+                        for (int i = 0; i < data.i; i++) {
+                            Exp59.addTerm(X.get("m" + m, "i" + i, "t0", "k" + k, "p" + p), 1);
+                        }
                 constraints.get(constraints.size() - 1).add(cplex.addEq(Exp59, 0, GenConstrint((constraints.size() + 1), "q", counter)));
                 counter++;
             }
@@ -681,10 +695,11 @@ public class Module {
                                         1);
                             }
 
-                            for (int i = 0; i < data.i; i++) {
-                                Exp23.addTerm(X.get("m" + m, "i" + i, "t" + t, "k" + k),
-                                        -1 * data.G2.get("j" + j) * data.RM.get("j" + j));
-                            }
+                            for (int i = 0; i < data.i; i++)
+                                for (int p = 0; p < data.p; p++) {
+                                    Exp23.addTerm(X.get("m" + m, "i" + i, "t" + t, "k" + k, "p" + p),
+                                            -1 * data.RO.get("j" + j, "p" + p) * data.RM.get("j" + j, "p" + p));
+                                }
                         }
                         constraints.get(constraints.size() - 1).add(cplex.addEq(Exp23, 0, GenConstrint((constraints.size() + 1), "q", counter)));
                         counter++;
@@ -696,32 +711,33 @@ public class Module {
             counter = 0;
 
             for (int i = 0; i < data.i; i++)
-                for (int t = 0; t < data.t; t++) {
+                for (int p = 0; p < data.p; p++)
+                    for (int t = 0; t < data.t; t++) {
 
-                    IloLinearNumExpr Exp24 = cplex.linearNumExpr();
-                    Exp24.addTerm(Sn.get("i" + i, "t" + t), -1);
-                    if (t != 0) {
-                        Exp24.addTerm(Sn.get("i" + i, "t" + (t - 1)), 1);
+                        IloLinearNumExpr Exp24 = cplex.linearNumExpr();
+                        Exp24.addTerm(Sn.get("i" + i, "t" + t, "p" + p), -1);
+                        if (t != 0) {
+                            Exp24.addTerm(Sn.get("i" + i, "t" + (t - 1), "p" + p), 1);
+                        }
+                        for (int k = 0; k < data.k; k++) {
+
+                            for (int f = 0; f < data.f; f++)
+                                Exp24.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k, "p" + p), 1);
+
+                            for (int m = 0; m < data.m; m++)
+                                Exp24.addTerm(X.get("m" + m, "i" + i, "t" + t, "k" + k, "p" + p), 1);
+
+                            for (int n = 0; n < data.n; n++)
+                                Exp24.addTerm(X.get("n" + n, "i" + i, "t" + t, "k" + k, "p" + p), 1);
+
+                            for (int z = 0; z < data.z; z++)
+                                Exp24.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p), -1);
+                        }
+                        constraints.get(constraints.size() - 1).add(cplex.addEq(Exp24, 0, GenConstrint((constraints.size() + 1), "q", counter)));
+
+
+                        counter++;
                     }
-                    for (int k = 0; k < data.k; k++) {
-
-                        for (int f = 0; f < data.f; f++)
-                            Exp24.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k), 1);
-
-                        for (int m = 0; m < data.m; m++)
-                            Exp24.addTerm(X.get("m" + m, "i" + i, "t" + t, "k" + k), 1);
-
-                        for (int n = 0; n < data.n; n++)
-                            Exp24.addTerm(X.get("n" + n, "i" + i, "t" + t, "k" + k), 1);
-
-                        for (int z = 0; z < data.z; z++)
-                            Exp24.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k), -1);
-                    }
-                    constraints.get(constraints.size() - 1).add(cplex.addEq(Exp24, 0, GenConstrint((constraints.size() + 1), "q", counter)));
-
-
-                    counter++;
-                }
             //endregion
 
             //region 28
@@ -729,23 +745,22 @@ public class Module {
             counter = 0;
 
             for (int i = 0; i < data.i; i++)
-                for (int t = 0; t < data.t; t++) {
+                for (int p = 0; p < data.p; p++)
+                    for (int t = 0; t < data.t; t++) {
 
-                    IloLinearNumExpr Exp25 = cplex.linearNumExpr();
-                    if (t != 0)
-                        Exp25.addTerm(-1, Sh.get("i" + i, "t" + (t - 1)));
-                    Exp25.addTerm(1, Sh.get("i" + i, "t" + t));
-                    for (int k = 0; k < data.k; k++) {
-                        for (int z = 0; z < data.z; z++)
-                            Exp25.addTerm(-1 * data.L1.get("l0"), X.get("z" + z, "i" + i, "t" + t, "k" + k));
-                        for (int n = 0; n < data.n; n++)
-                            Exp25.addTerm(1, X.get("i" + i, "n" + n, "t" + t, "k" + k));
+                        IloLinearNumExpr Exp25 = cplex.linearNumExpr();
+                        if (t != 0)
+                            Exp25.addTerm(-1, Sh.get("i" + i, "t" + (t - 1), "p" + p));
+                        Exp25.addTerm(1, Sh.get("i" + i, "t" + t, "p" + p));
+                        for (int k = 0; k < data.k; k++) {
+                            for (int z = 0; z < data.z; z++)
+                                Exp25.addTerm(-1 * data.L1.get("p" + p), X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p));
+                            for (int n = 0; n < data.n; n++)
+                                Exp25.addTerm(1, X.get("i" + i, "n" + n, "t" + t, "k" + k, "p" + p));
+                        }
+                        constraints.get(constraints.size() - 1).add(cplex.addEq(Exp25, 0, GenConstrint((constraints.size() + 1), "q", counter)));
+                        counter++;
                     }
-                    constraints.get(constraints.size() - 1).add(cplex.addEq(Exp25, 0, GenConstrint((constraints.size() + 1), "q", counter)));
-
-
-                    counter++;
-                }
             //endregion
 
             //region 29
@@ -753,21 +768,22 @@ public class Module {
             counter = 0;
 
             for (int i = 0; i < data.i; i++)
-                for (int t = 0; t < data.t; t++) {
-                    IloLinearNumExpr Exp26 = cplex.linearNumExpr();
-                    if (t != 0)
-                        Exp26.addTerm(-1, Sm.get("i" + i, "t" + (t - 1)));
-                    Exp26.addTerm(1, Sm.get("i" + i, "t" + t));
-                    for (int k = 0; k < data.k; k++) {
-                        for (int z = 0; z < data.z; z++)
-                            Exp26.addTerm(-1 * data.L2.get("l0"), X.get("z" + z, "i" + i, "t" + t, "k" + k));
-                        for (int m = 0; m < data.m; m++)
-                            Exp26.addTerm(1, X.get("i" + i, "m" + m, "t" + t, "k" + k));
-                    }
-                    constraints.get(constraints.size() - 1).add(cplex.addEq(Exp26, 0, GenConstrint((constraints.size() + 1), "q", counter)));
+                for (int p = 0; p < data.p; p++)
+                    for (int t = 0; t < data.t; t++) {
+                        IloLinearNumExpr Exp26 = cplex.linearNumExpr();
+                        if (t != 0)
+                            Exp26.addTerm(-1, Sm.get("i" + i, "t" + (t - 1), "p" + p));
+                        Exp26.addTerm(1, Sm.get("i" + i, "t" + t, "p" + p));
+                        for (int k = 0; k < data.k; k++) {
+                            for (int z = 0; z < data.z; z++)
+                                Exp26.addTerm(-1 * data.L2.get("p" + p), X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p));
+                            for (int m = 0; m < data.m; m++)
+                                Exp26.addTerm(1, X.get("i" + i, "m" + m, "t" + t, "k" + k, "p" + p));
+                        }
+                        constraints.get(constraints.size() - 1).add(cplex.addEq(Exp26, 0, GenConstrint((constraints.size() + 1), "q", counter)));
 
-                    counter++;
-                }
+                        counter++;
+                    }
             //endregion
 
             //region 30
@@ -775,44 +791,46 @@ public class Module {
             counter = 0;
 
             for (int i = 0; i < data.i; i++)
-                for (int t = 0; t < data.t; t++) {
-                    IloLinearNumExpr Exp27 = cplex.linearNumExpr();
-                    double L3 = 1 - data.L2.get("l0") - data.L1.get("l0");
-                    if (t != 0)
-                        Exp27.addTerm(-1, Sl.get("i" + i, "t" + (t - 1)));
-                    Exp27.addTerm(1, Sl.get("i" + i, "t" + t));
-                    for (int k = 0; k < data.k; k++) {
-                        for (int z = 0; z < data.z; z++)
-                            Exp27.addTerm(-1 * L3, X.get("z" + z, "i" + i, "t" + t, "k" + k));
-                        for (int d = 0; d < data.d; d++)
-                            Exp27.addTerm(1, X.get("i" + i, "d" + d, "t" + t, "k" + k));
+                for (int p = 0; p < data.p; p++)
+                    for (int t = 0; t < data.t; t++) {
+                        IloLinearNumExpr Exp27 = cplex.linearNumExpr();
+                        double L3 = 1 - data.L2.get("p" + p) - data.L1.get("p" + p);
+                        if (t != 0)
+                            Exp27.addTerm(-1, Sl.get("i" + i, "t" + (t - 1), "p" + p));
+                        Exp27.addTerm(1, Sl.get("i" + i, "t" + t, "p" + p));
+                        for (int k = 0; k < data.k; k++) {
+                            for (int z = 0; z < data.z; z++)
+                                Exp27.addTerm(-1 * L3, X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p));
+                            for (int d = 0; d < data.d; d++)
+                                Exp27.addTerm(1, X.get("i" + i, "d" + d, "t" + t, "k" + k, "p" + p));
+                        }
+                        constraints.get(constraints.size() - 1).add(cplex.addEq(Exp27, 0, GenConstrint((constraints.size() + 1), "q", counter)));
+                        counter++;
                     }
-                    constraints.get(constraints.size() - 1).add(cplex.addEq(Exp27, 0, GenConstrint((constraints.size() + 1), "q", counter)));
-                    counter++;
-                }
             //endregion
 
             //region 31
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int f = 0; f < data.f; f++)
-                for (int t = 0; t < data.t; t++) {
+                for (int p = 0; p < data.p; p++)
+                    for (int t = 0; t < data.t; t++) {
 
-                    IloLinearNumExpr Exp28 = cplex.linearNumExpr();
-                    for (int i = 0; i < data.i; i++)
-                        for (int k = 0; k < data.k; k++) {
-                            Exp28.addTerm(1,
-                                    X.get("f" + f, "i" + i, "t" + t, "k" + k));
-                        }
-                    for (int h = 0; h < data.ho; h++)
-                        for (int o = 0; o < data.o; o++)
-                            for (int tf = 0; tf <= t; tf++) {
-                                Exp28.addTerm(-1 * data.CO.get("h" + h, "o" + o),
-                                        FF.get("f" + f, "h" + h, "o" + o, "t" + tf));
+                        IloLinearNumExpr Exp28 = cplex.linearNumExpr();
+                        for (int i = 0; i < data.i; i++)
+                            for (int k = 0; k < data.k; k++) {
+                                Exp28.addTerm(1,
+                                        X.get("f" + f, "i" + i, "t" + t, "k" + k, "p" + p));
                             }
-                    constraints.get(constraints.size() - 1).add(cplex.addLe(Exp28, 0, GenConstrint((constraints.size() + 1), "q", counter)));
-                    counter++;
-                }
+                        for (int h = 0; h < data.ho; h++)
+                            for (int o = 0; o < data.o; o++)
+                                for (int tf = 0; tf <= t; tf++) {
+                                    Exp28.addTerm(-1 * data.CO.get("h" + h, "o" + o),
+                                            FF.get("f" + f, "h" + h, "o" + o, "t" + tf, "p" + p));
+                                }
+                        constraints.get(constraints.size() - 1).add(cplex.addLe(Exp28, 0, GenConstrint((constraints.size() + 1), "q", counter)));
+                        counter++;
+                    }
             //endregion
 
             //region 32
@@ -823,10 +841,11 @@ public class Module {
                 IloLinearNumExpr Exp29 = cplex.linearNumExpr();
                 for (int h = 0; h < data.ho; h++)
                     for (int t = 0; t < data.t; t++)
-                        for (int o = 0; o < data.o; o++) {
-                            Exp29.addTerm(1,
-                                    FF.get("f" + f, "h" + h, "o" + o, "t" + t));
-                        }
+                        for (int p = 0; p < data.p; p++)
+                            for (int o = 0; o < data.o; o++) {
+                                Exp29.addTerm(1,
+                                        FF.get("f" + f, "h" + h, "o" + o, "t" + t, "p" + p));
+                            }
                 constraints.get(constraints.size() - 1).add(cplex.addLe(Exp29, 1, GenConstrint((constraints.size() + 1), "q", f)));
             }
             //endregion
@@ -835,26 +854,27 @@ public class Module {
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int i = 0; i < data.i; i++)
-                for (int t = 0; t < data.t; t++) {
-                    IloLinearNumExpr Exp30 = cplex.linearNumExpr();
-                    Exp30.addTerm(1, Sn.get("i" + i, "t" + t));
-                    Exp30.addTerm(1, Sh.get("i" + i, "t" + t));
-                    Exp30.addTerm(1, Sm.get("i" + i, "t" + t));
-                    Exp30.addTerm(1, Sl.get("i" + i, "t" + t));
+                for (int p = 0; p < data.p; p++)
+                    for (int t = 0; t < data.t; t++) {
+                        IloLinearNumExpr Exp30 = cplex.linearNumExpr();
+                        Exp30.addTerm(1, Sn.get("i" + i, "t" + t, "p" + p));
+                        Exp30.addTerm(1, Sh.get("i" + i, "t" + t, "p" + p));
+                        Exp30.addTerm(1, Sm.get("i" + i, "t" + t, "p" + p));
+                        Exp30.addTerm(1, Sl.get("i" + i, "t" + t, "p" + p));
 
-                    for (int k = 0; k < data.k; k++)
-                        for (int z = 0; z < data.z; z++) {
-                            Exp30.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k), 1);
-                            Exp30.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k), 1);
+                        for (int k = 0; k < data.k; k++)
+                            for (int z = 0; z < data.z; z++) {
+                                Exp30.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p), 1);
+                                Exp30.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p), 1);
 
-                        }
-                    for (int h = 0; h < data.hi; h++)
-                        for (int tf = 0; tf <= t; tf++) {
-                            Exp30.addTerm(-1 * data.CA.get("hi" + h), WH.get("i" + i, "h" + h, "t" + tf));
-                        }
-                    constraints.get(constraints.size() - 1).add(cplex.addLe(Exp30, 0, GenConstrint((constraints.size() + 1), "q", counter)));
-                    counter++;
-                }
+                            }
+                        for (int h = 0; h < data.hi; h++)
+                            for (int tf = 0; tf <= t; tf++) {
+                                Exp30.addTerm(-1 * data.CA.get("hi" + h), WH.get("i" + i, "h" + h, "t" + tf));
+                            }
+                        constraints.get(constraints.size() - 1).add(cplex.addLe(Exp30, 0, GenConstrint((constraints.size() + 1), "q", counter)));
+                        counter++;
+                    }
             //endregion
 
             //region 34
@@ -864,7 +884,7 @@ public class Module {
                 for (int h = 0; h < data.hi; h++)
                     for (int t = 0; t < data.t; t++)
                         Exp32.addTerm(WH.get("i" + i, "h" + h, "t" + t), 1);
-                constraints.get(constraints.size() - 1).add(cplex.addLe(Exp32, 1, GenConstrint(32, "i", i)));
+                constraints.get(constraints.size() - 1).add(cplex.addLe(Exp32, 1, GenConstrint((constraints.size() + 1), "i", i)));
             }
             //endregion
 
@@ -877,8 +897,9 @@ public class Module {
 
                     for (int i = 0; i < data.i; i++) {
                         for (int k = 0; k < data.k; k++)
-                            Exp34.addTerm(X.get("i" + i, "d" + d, "t" + t, "k" + k)
-                                    , 1);
+                            for (int p = 0; p < data.p; p++)
+                                Exp34.addTerm(X.get("i" + i, "d" + d, "t" + t, "k" + k, "p" + p)
+                                        , 1);
 
                         for (int h = 0; h < data.hd; h++)
                             for (int tf = 0; tf <= t; tf++)
@@ -887,7 +908,6 @@ public class Module {
                     }
                     constraints.get(constraints.size() - 1).add(cplex.addLe(Exp34, 0, GenConstrint((constraints.size() + 1), "q", counter)));
                     counter++;
-
                 }
             //endregion
 
@@ -912,8 +932,10 @@ public class Module {
                     IloLinearNumExpr Exp37 = cplex.linearNumExpr();
                     for (int i = 0; i < data.i; i++)
                         for (int k = 0; k < data.k; k++)
-                            Exp37.addTerm(1,
-                                    X.get("n" + n, "i" + i, "t" + t, "k" + k));
+                            for (int p = 0; p < data.p; p++)
+                                Exp37.addTerm(1,
+                                        X.get("n" + n, "i" + i, "t" + t, "k" + k, "p" + p));
+
                     for (int h = 0; h < data.hn; h++)
                         for (int tf = 0; tf <= t; tf++)
                             Exp37.addTerm(RF.get("n" + n, "h" + h, "t" + tf),
@@ -945,8 +967,9 @@ public class Module {
                     IloLinearNumExpr Exp40 = cplex.linearNumExpr();
                     for (int i = 0; i < data.i; i++)
                         for (int k = 0; k < data.k; k++)
-                            Exp40.addTerm(1,
-                                    X.get("m" + m, "i" + i, "t" + t, "k" + k));
+                            for (int p = 0; p < data.p; p++)
+                                Exp40.addTerm(1,
+                                        X.get("m" + m, "i" + i, "t" + t, "k" + k, "p" + p));
                     for (int h = 0; h < data.hm; h++)
                         for (int tf = 0; tf <= t; tf++)
                             Exp40.addTerm(RM.get("m" + m, "h" + h, "t" + tf),
@@ -990,7 +1013,7 @@ public class Module {
                 }
             //endregion
 
-            //region 43
+            //region 42
             constraints.add(new ArrayList<>());
             for (int q = 0; q < data.q; q++) {
                 IloLinearNumExpr Exp44 = cplex.linearNumExpr();
@@ -1004,7 +1027,7 @@ public class Module {
             }
             //endregion
 
-            //region 44
+            //region 43
             constraints.add(new ArrayList<>());
             for (int t = 0; t < data.t; t++) {
                 IloLinearNumExpr Exp46 = cplex.linearNumExpr();
@@ -1019,53 +1042,55 @@ public class Module {
             }
             //endregion
 
+            //region 44
+            constraints.add(new ArrayList<>());
+            counter = 0;
+            for (int t = 0; t < data.t; t++)
+                for (int p = 0; p < data.p; p++)
+                    for (int z = 0; z < data.z; z++) {
+
+                        IloLinearNumExpr Exp48 = cplex.linearNumExpr();
+                        for (int i = 0; i < data.i; i++)
+                            for (int k = 0; k < data.k; k++)
+                                Exp48.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p), 1);
+
+                        constraints.get(constraints.size() - 1).add(cplex.addGe(Exp48,
+                                data.DE.get("z" + z, "t" + t, "p" + p), GenConstrint((constraints.size() + 1), "q", counter)));
+
+                        counter++;
+                    }
+            //endregion
+
             //region 45
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int t = 0; t < data.t; t++)
-                for (int z = 0; z < data.z; z++) {
+                for (int p = 0; p < data.p; p++)
+                    for (int z = 0; z < data.z; z++) {
 
-                    IloLinearNumExpr Exp48 = cplex.linearNumExpr();
-                    for (int i = 0; i < data.i; i++)
-                        for (int k = 0; k < data.k; k++)
-                            Exp48.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k), 1);
+                        IloLinearNumExpr Exp49 = cplex.linearNumExpr();
+                        for (int i = 0; i < data.i; i++)
+                            for (int k = 0; k < data.k; k++)
+                                Exp49.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p), 1);
 
-                    constraints.get(constraints.size() - 1).add(cplex.addGe(Exp48,
-                            data.DE.get("z" + z, "t" + t), GenConstrint((constraints.size() + 1), "q", counter)));
+                        constraints.get(constraints.size() - 1).add(cplex.addGe(Exp49,
+                                data.BE.get("z" + z, "t" + t, "p" + p), GenConstrint((constraints.size() + 1), "q", counter)));
 
-                    counter++;
-                }
+                        counter++;
+                    }
             //endregion
 
             //region 46
-            constraints.add(new ArrayList<>());
-            counter = 0;
-            for (int t = 0; t < data.t; t++)
-                for (int z = 0; z < data.z; z++) {
-
-                    IloLinearNumExpr Exp49 = cplex.linearNumExpr();
-                    for (int i = 0; i < data.i; i++)
-                        for (int k = 0; k < data.k; k++)
-                            Exp49.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k), 1);
-
-                    constraints.get(constraints.size() - 1).add(cplex.addGe(Exp49,
-                            data.BE.get("z" + z, "t" + t), GenConstrint((constraints.size() + 1), "q", counter)));
-
-                    counter++;
-                }
-            //endregion
-
-            //region 47
             constraints.add(new ArrayList<>());
 
             IloLinearNumExpr Exp50 = cplex.linearNumExpr();
             for (int k = 0; k < data.k; k++)
                 Exp50.addTerm(TR1.get("k" + k), 1);
 
-            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp50, 1, "constraints" + (constraints.size() + 1)));
+            constraints.get(constraints.size() - 1).add(cplex.addLe(Exp50, 1, GenConstrint(constraints.size() + 1)));
             //endregion
 
-            //region 48
+            //region 47
             constraints.add(new ArrayList<>());
 
             IloLinearNumExpr Exp52 = cplex.linearNumExpr();
@@ -1074,10 +1099,10 @@ public class Module {
                 Exp52.addTerm(TR2.get("k" + k), 1);
 
 
-            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp52, 1, "constraints" + (constraints.size() + 1)));
+            constraints.get(constraints.size() - 1).add(cplex.addLe(Exp52, 1, GenConstrint(constraints.size() + 1)));
             //endregion
 
-            //region 49
+            //region 48
             constraints.add(new ArrayList<>());
 
             IloLinearNumExpr Exp54 = cplex.linearNumExpr();
@@ -1086,10 +1111,10 @@ public class Module {
                 Exp54.addTerm(TR3.get("k" + k), 1);
 
 
-            constraints.get(constraints.size() - 1).add(cplex.addEq(Exp54, 1, "constraints" + (constraints.size() + 1)));
+            constraints.get(constraints.size() - 1).add(cplex.addLe(Exp54, 1, GenConstrint(constraints.size() + 1)));
             //endregion
 
-            //region 50
+            //region 49
             constraints.add(new ArrayList<>());
             for (int k = 0; k < data.k; k++) {
 
@@ -1116,7 +1141,7 @@ public class Module {
             }
             //endregion
 
-            //region 51
+            //region 50
             constraints.add(new ArrayList<>());
             for (int k = 0; k < data.k; k++) {
 
@@ -1124,28 +1149,32 @@ public class Module {
                 for (int t = 0; t < data.t; t++) {
 
                     for (int n = 0; n < data.n; n++)
-                        for (int i = 0; i < data.i; i++) {
-                            Exp53.addTerm(1, X.get("i" + i, "n" + n, "t" + t, "k" + k));
-                            Exp53.addTerm(1, X.get("n" + n, "i" + i, "t" + t, "k" + k));
-                        }
+                        for (int i = 0; i < data.i; i++)
+                            for (int p = 0; p < data.p; p++) {
+                                Exp53.addTerm(1, X.get("i" + i, "n" + n, "t" + t, "k" + k, "p" + p));
+                                Exp53.addTerm(1, X.get("n" + n, "i" + i, "t" + t, "k" + k, "p" + p));
+                            }
 
                     for (int m = 0; m < data.m; m++)
-                        for (int i = 0; i < data.i; i++) {
-                            Exp53.addTerm(1, X.get("i" + i, "m" + m, "t" + t, "k" + k));
-                            Exp53.addTerm(1, X.get("m" + m, "i" + i, "t" + t, "k" + k));
-                        }
+                        for (int i = 0; i < data.i; i++)
+                            for (int p = 0; p < data.p; p++) {
+                                Exp53.addTerm(1, X.get("i" + i, "m" + m, "t" + t, "k" + k, "p" + p));
+                                Exp53.addTerm(1, X.get("m" + m, "i" + i, "t" + t, "k" + k, "p" + p));
+                            }
 
                     for (int z = 0; z < data.z; z++)
-                        for (int i = 0; i < data.i; i++) {
-                            Exp53.addTerm(1, X.get("i" + i, "z" + z, "t" + t, "k" + k));
-                            Exp53.addTerm(1, X.get("z" + z, "i" + i, "t" + t, "k" + k));
-                        }
+                        for (int i = 0; i < data.i; i++)
+                            for (int p = 0; p < data.p; p++) {
+                                Exp53.addTerm(1, X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p));
+                                Exp53.addTerm(1, X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p));
+                            }
 
 
                     for (int f = 0; f < data.f; f++)
-                        for (int i = 0; i < data.i; i++) {
-                            Exp53.addTerm(1, X.get("f" + f, "i" + i, "t" + t, "k" + k));
-                        }
+                        for (int i = 0; i < data.i; i++)
+                            for (int p = 0; p < data.p; p++) {
+                                Exp53.addTerm(1, X.get("f" + f, "i" + i, "t" + t, "k" + k, "p" + p));
+                            }
                 }
                 Exp53.addTerm(TR2.get("k" + k), -1 * BN);
                 constraints.get(constraints.size() - 1).add(cplex.addLe(Exp53, 0, GenConstrint((constraints.size() + 1), "k", k)));
@@ -1153,8 +1182,7 @@ public class Module {
             }
             //endregion
 
-
-            //region 52
+            //region 51
             constraints.add(new ArrayList<>());
             for (int k = 0; k < data.k; k++) {
 
@@ -1171,7 +1199,7 @@ public class Module {
             }
             //endregion
 
-            //region 56
+            //region 52
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int f = 0; f < data.f; f++)
@@ -1179,34 +1207,38 @@ public class Module {
 
                     IloLinearNumExpr Exp56 = cplex.linearNumExpr();
                     for (int o = 0; o < data.o; o++)
-                        Exp56.addTerm(P.get("f" + f, "o" + o, "t" + t), 1);
+                        for (int p = 0; p < data.p; p++)
+
+                            Exp56.addTerm(P.get("f" + f, "o" + o, "t" + t, "p" + p), 1);
 
                     for (int i = 0; i < data.i; i++)
-                        for (int k = 0; k < data.k; k++)
-                            Exp56.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k), -1);
+                        for (int p = 0; p < data.p; p++)
+                            for (int k = 0; k < data.k; k++)
+                                Exp56.addTerm(X.get("f" + f, "i" + i, "t" + t, "k" + k, "p" + p), -1);
                     constraints.get(constraints.size() - 1).add(cplex.addEq(Exp56, 0, GenConstrint((constraints.size() + 1), "q", counter)));
                     counter++;
                 }
             //endregion
 
-            //region 57
+            //region 53
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int o = 0; o < data.o; o++)
-                for (int t = 0; t < data.t; t++)
-                    for (int f = 0; f < data.f; f++) {
+                for (int p = 0; p < data.p; p++)
+                    for (int t = 0; t < data.t; t++)
+                        for (int f = 0; f < data.f; f++) {
 
-                        IloLinearNumExpr Exp57 = cplex.linearNumExpr();
-                        Exp57.addTerm(1, P.get("f" + f, "o" + o, "t" + t));
+                            IloLinearNumExpr Exp57 = cplex.linearNumExpr();
+                            Exp57.addTerm(1, P.get("f" + f, "o" + o, "t" + t, "p" + p));
 
-                        for (int h = 0; h < data.ho; h++)
-                            for (int tf = 0; tf <= t; tf++) {
-                                Exp57.addTerm(-1 * BN,
-                                        FF.get("f" + f, "h" + h, "o" + o, "t" + tf));
-                            }
-                        constraints.get(constraints.size() - 1).add(cplex.addLe(Exp57, 0, GenConstrint((constraints.size() + 1), "q", counter)));
-                        counter++;
-                    }
+                            for (int h = 0; h < data.ho; h++)
+                                for (int tf = 0; tf <= t; tf++) {
+                                    Exp57.addTerm(-1 * BN,
+                                            FF.get("f" + f, "h" + h, "o" + o, "t" + tf, "p" + p));
+                                }
+                            constraints.get(constraints.size() - 1).add(cplex.addLe(Exp57, 0, GenConstrint((constraints.size() + 1), "q", counter)));
+                            counter++;
+                        }
             //endregion
 
 
@@ -1216,7 +1248,6 @@ public class Module {
         }
 
     }
-
 
     public void initVariables() {
         try {
@@ -1275,12 +1306,13 @@ public class Module {
                         WH.put(cplex.boolVar(GenName("WH", "iht", i, h, t)), "i" + i, "h" + h, "t" + t);
 
 
-            FF = new HashMapAmir<>(4, "FF");
+            FF = new HashMapAmir<>(5, "FF");
             for (int f = 0; f < data.f; f++)
                 for (int h = 0; h < data.ho; h++)
                     for (int o = 0; o < data.o; o++)
                         for (int t = 0; t < data.t; t++)
-                            FF.put(cplex.boolVar(GenName("FF", "fhot", f, h, o, t)), "f" + f, "h" + h, "o" + o, "t" + t);
+                            for (int p = 0; p < data.p; p++)
+                                FF.put(cplex.boolVar(GenName("FF", "fhotp", f, h, o, t, p)), "f" + f, "h" + h, "o" + o, "t" + t, "p" + p);
 
             Q = new HashMapAmir<>(3, "Q");
             for (int q = 0; q < data.q; q++)
@@ -1319,42 +1351,49 @@ public class Module {
             for (int k = 0; k < data.k; k++)
                 TR3.put(cplex.boolVar(GenName("TR3", "k", k)), "k" + k);
 
-            X = new HashMapAmir<>(4, "X");
+            X = new HashMapAmir<>(5, "X");
             XM = new HashMapAmir<>(5, "XM");
-            P = new HashMapAmir<>(3, "P");
+            P = new HashMapAmir<>(4, "P");
 
             for (int t = 0; t < data.t; t++) {
 
                 for (int f = 0; f < data.f; f++)
-                    for (int i = 0; i < data.i; i++)
-                        for (int k = 0; k < data.k; k++)
-                            X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "fitk", f, i, t, k)), "f" + f, "i" + i, "t" + t, "k" + k);
+                    for (int p = 0; p < data.p; p++)
+
+                        for (int i = 0; i < data.i; i++)
+                            for (int k = 0; k < data.k; k++)
+                                X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "fitkp", f, i, t, k, p)), "f" + f, "i" + i, "t" + t, "k" + k, "p" + p);
 
                 for (int f = 0; f < data.f; f++)
-                    for (int o = 0; o < data.o; o++)
-                        P.put(cplex.numVar(0, Double.MAX_VALUE, GenName("P", "fot", f, o, t)), "f" + f, "o" + o, "t" + t);
+                    for (int p = 0; p < data.p; p++)
+
+                        for (int o = 0; o < data.o; o++)
+                            P.put(cplex.numVar(0, Double.MAX_VALUE, GenName("P", "fotp", f, o, t, p)), "f" + f, "o" + o, "t" + t, "p" + p);
 
                 for (int i = 0; i < data.i; i++)
                     for (int z = 0; z < data.z; z++)
-                        for (int k = 0; k < data.k; k++) {
-                            X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "iztk", i, z, t, k)), "i" + i, "z" + z, "t" + t, "k" + k);
-                            X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "zitk", z, i, t, k)), "z" + z, "i" + i, "t" + t, "k" + k);
-                        }
+                        for (int p = 0; p < data.p; p++)
+
+                            for (int k = 0; k < data.k; k++) {
+                                X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "iztkp", i, z, t, k, p)), "i" + i, "z" + z, "t" + t, "k" + k, "p" + p);
+                                X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "zitkp", z, i, t, k, p)), "z" + z, "i" + i, "t" + t, "k" + k, "p" + p);
+                            }
 
                 for (int i = 0; i < data.i; i++)
-                    for (int k = 0; k < data.k; k++) {
-                        for (int d = 0; d < data.d; d++)
-                            X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "idtk", i, d, t, k)), "i" + i, "d" + d, "t" + t, "k" + k);
+                    for (int p = 0; p < data.p; p++)
+                        for (int k = 0; k < data.k; k++) {
+                            for (int d = 0; d < data.d; d++)
+                                X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "idtkp", i, d, t, k, p)), "i" + i, "d" + d, "t" + t, "k" + k, "p" + p);
 
-                        for (int m = 0; m < data.m; m++) {
-                            X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "imtk", i, m, t, k)), "i" + i, "m" + m, "t" + t, "k" + k);
-                            X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "mitk", m, i, t, k)), "m" + m, "i" + i, "t" + t, "k" + k);
+                            for (int m = 0; m < data.m; m++) {
+                                X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "imtkp", i, m, t, k, p)), "i" + i, "m" + m, "t" + t, "k" + k, "p" + p);
+                                X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "mitkp", m, i, t, k, p)), "m" + m, "i" + i, "t" + t, "k" + k, "p" + p);
+                            }
+                            for (int n = 0; n < data.n; n++) {
+                                X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "intkp", i, n, t, k, p)), "i" + i, "n" + n, "t" + t, "k" + k, "p" + p);
+                                X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "nitkp", n, i, t, k, p)), "n" + n, "i" + i, "t" + t, "k" + k, "p" + p);
+                            }
                         }
-                        for (int n = 0; n < data.n; n++) {
-                            X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "intk", i, n, t, k)), "i" + i, "n" + n, "t" + t, "k" + k);
-                            X.put(cplex.numVar(0, Double.MAX_VALUE, GenName("X", "nitk", n, i, t, k)), "n" + n, "i" + i, "t" + t, "k" + k);
-                        }
-                    }
 
                 for (int j = 0; j < data.j; j++) {
                     for (int s = 0; s < data.s; s++)
@@ -1377,19 +1416,19 @@ public class Module {
                 }
             }
 
-            Sh = new HashMapAmir<>(2, "Sh");
-            Sm = new HashMapAmir<>(2, "Sm");
-            Sl = new HashMapAmir<>(2, "Sl");
-            Sn = new HashMapAmir<>(2, "Sn");
+            Sh = new HashMapAmir<>(3, "Sh");
+            Sm = new HashMapAmir<>(3, "Sm");
+            Sl = new HashMapAmir<>(3, "Sl");
+            Sn = new HashMapAmir<>(3, "Sn");
             for (int i = 0; i < data.i; i++)
-                for (int t = 0; t < data.t; t++) {
+                for (int p = 0; p < data.p; p++)
+                    for (int t = 0; t < data.t; t++) {
 
-                    Sh.put(cplex.numVar(0, Double.MAX_VALUE, GenName("Sh", "it", i, t)), "i" + i, "t" + t);
-                    Sm.put(cplex.numVar(0, Double.MAX_VALUE, GenName("Sm", "it", i, t)), "i" + i, "t" + t);
-                    Sl.put(cplex.numVar(0, Double.MAX_VALUE, GenName("Sl", "it", i, t)), "i" + i, "t" + t);
-
-                    Sn.put(cplex.numVar(0, Double.MAX_VALUE, GenName("Sn", "it", i, t)), "i" + i, "t" + t);
-                }
+                        Sh.put(cplex.numVar(0, Double.MAX_VALUE, GenName("Sh", "itp", i, t, p)), "i" + i, "t" + t, "p" + p);
+                        Sm.put(cplex.numVar(0, Double.MAX_VALUE, GenName("Sm", "itp", i, t, p)), "i" + i, "t" + t, "p" + p);
+                        Sl.put(cplex.numVar(0, Double.MAX_VALUE, GenName("Sl", "itp", i, t, p)), "i" + i, "t" + t, "p" + p);
+                        Sn.put(cplex.numVar(0, Double.MAX_VALUE, GenName("Sn", "itp", i, t, p)), "i" + i, "t" + t, "p" + p);
+                    }
 
         } catch (
                 IloException e) {
@@ -1411,7 +1450,12 @@ public class Module {
     }
 
     private String GenConstrint(int c, String name, int in) {
-        String re = String.format("constraint_%d_(%s%d)", c, name, in);
+        String re = String.format("C_%d_(%s%d)", c, name, in);
+        return re;
+    }
+
+    private String GenConstrint(int c) {
+        String re = String.format("C_%d", c);
         return re;
     }
 

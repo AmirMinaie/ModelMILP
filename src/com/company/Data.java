@@ -37,43 +37,44 @@ public class Data {
     public int o = 0;
     public int k = 0;
     public int e = 0;
+    public int p = 0;
+
     //endregion
 
     //region Parameter
-    public HashMapAmir<String, Double> FA = new HashMapAmir<String, Double>(3, "FA");
+    public HashMapAmir<String, Double> FA = new HashMapAmir<String, Double>(4, "FA");
     public HashMapAmir<String, Double> FW = new HashMapAmir<String, Double>(2, "FW");
     public HashMapAmir<String, Double> FD = new HashMapAmir<String, Double>(2, "FD");
     public HashMapAmir<String, Double> FR = new HashMapAmir<String, Double>(2, "FR");
     public HashMapAmir<String, Double> FM = new HashMapAmir<String, Double>(2, "FM");
     public HashMapAmir<String, Double> FQ = new HashMapAmir<String, Double>(2, "FQ");
     public HashMapAmir<String, Double> DS = new HashMapAmir<String, Double>(2, "DS");
-    public HashMapAmir<String, Double> C = new HashMapAmir<>(2, "C");
-    public HashMapAmir<String, Double> CJ = new HashMapAmir<String, Double>(3, "cj");
-    public HashMapAmir<String, Double> OC = new HashMapAmir<String, Double>(2, "OC");
-    public HashMapAmir<String, Double> OCI = new HashMapAmir<String, Double>(1, "OCI");
-    public HashMapAmir<String, Double> OCD = new HashMapAmir<String, Double>(1, "OCD");
-    public HashMapAmir<String, Double> OCN = new HashMapAmir<String, Double>(1, "OCN");
-    public HashMapAmir<String, Double> OCM = new HashMapAmir<String, Double>(1, "OCM");
+    public HashMapAmir<String, Double> C = new HashMapAmir<>(3, "C");
+    public HashMapAmir<String, Double> OC = new HashMapAmir<String, Double>(3, "OC");
+    public HashMapAmir<String, Double> OCI = new HashMapAmir<String, Double>(2, "OCI");
+    public HashMapAmir<String, Double> OCD = new HashMapAmir<String, Double>(2, "OCD");
+    public HashMapAmir<String, Double> OCN = new HashMapAmir<String, Double>(2, "OCN");
+    public HashMapAmir<String, Double> OCM = new HashMapAmir<String, Double>(2, "OCM");
     public HashMapAmir<String, Double> PS = new HashMapAmir<String, Double>(3, "PS");
     public HashMapAmir<String, Double> PQ = new HashMapAmir<String, Double>(2, "PQ");
-    public HashMapAmir<String, Double> PZ = new HashMapAmir<String, Double>(1, "PZ");
-    public HashMapAmir<String, Double> PZ1 = new HashMapAmir<String, Double>(1, "PZ1");
-    public HashMapAmir<String, Double> PZ2 = new HashMapAmir<String, Double>(1, "PZ2");
-    public HashMapAmir<String, Double> PZ3 = new HashMapAmir<String, Double>(1, "PZ3");
-    public HashMapAmir<String, Double> A = new HashMapAmir<String, Double>(1, "A");
-    public HashMapAmir<String, Double> RM = new HashMapAmir<String, Double>(1, "RM");
+    public HashMapAmir<String, Double> PZ = new HashMapAmir<String, Double>(2, "PZ");
+    public HashMapAmir<String, Double> PG = new HashMapAmir<String, Double>(2, "PG");
+    public HashMapAmir<String, Double> PM = new HashMapAmir<String, Double>(2, "PM");
+    public HashMapAmir<String, Double> PB = new HashMapAmir<String, Double>(2, "PB");
+    public HashMapAmir<String, Double> ER = new HashMapAmir<String, Double>(2, "ER");
+    public HashMapAmir<String, Double> RM = new HashMapAmir<String, Double>(2, "RM");
     public HashMapAmir<String, Double> CA = new HashMapAmir<String, Double>(1, "CA");
     public HashMapAmir<String, Double> CO = new HashMapAmir<String, Double>(2, "CO");
     public HashMapAmir<String, Double> BU = new HashMapAmir<String, Double>(1, "BU");
     public HashMapAmir<String, Double> R = new HashMapAmir<String, Double>(1, "R");
-    public HashMapAmir<String, Double> G1 = new HashMapAmir<String, Double>(1, "G1");
-    public HashMapAmir<String, Double> G2 = new HashMapAmir<>(1, "G2");
+    public HashMapAmir<String, Double> G = new HashMapAmir<String, Double>(2, "G");
+    public HashMapAmir<String, Double> RO = new HashMapAmir<>(2, "RO");
     public HashMapAmir<String, Double> L1 = new HashMapAmir<>(1, "L1");
     public HashMapAmir<String, Double> L2 = new HashMapAmir<>(1, "L2");
-    public HashMapAmir<String, Double> DE = new HashMapAmir<>(2, "DE");
+    public HashMapAmir<String, Double> DE = new HashMapAmir<>(3, "DE");
     public HashMapAmir<String, Double> RE = new HashMapAmir<>(1, "RE");
     public HashMapAmir<String, Double> CU = new HashMapAmir<>(1, "CU");
-    public HashMapAmir<String, Double> BE = new HashMapAmir<>(2, "BE");
+    public HashMapAmir<String, Double> BE = new HashMapAmir<>(3, "BE");
     public HashMapAmir<String, Double> par = new HashMapAmir<>(1, "par");
 
     private boolean SaveZero;
@@ -97,7 +98,7 @@ public class Data {
             Workbook wb = WorkbookFactory.create(fis);
             Sheet sheet = wb.getSheetAt(0);
 
-            for (int l = 1; l <= 19; l++) {
+            for (int l = 1; l <= 20; l++) {
                 int temp = (int) sheet.getRow(l).getCell(2).getNumericCellValue();
                 switch (sheet.getRow(l).getCell(1).getStringCellValue().toLowerCase()) {
 
@@ -158,6 +159,9 @@ public class Data {
                     case "e":
                         e = temp;
                         break;
+                    case "p":
+                        p = temp;
+                        break;
                 }
             }
 
@@ -217,17 +221,17 @@ public class Data {
                             case "PZ":
                                 read(PZ, ii, sheet);
                                 break;
-                            case "PZ1":
-                                read(PZ1, ii, sheet);
+                            case "PG":
+                                read(PG, ii, sheet);
                                 break;
-                            case "PZ2":
-                                read(PZ2, ii, sheet);
+                            case "PM":
+                                read(PM, ii, sheet);
                                 break;
-                            case "PZ3":
-                                read(PZ3, ii, sheet);
+                            case "PB":
+                                read(PB, ii, sheet);
                                 break;
-                            case "A":
-                                read(A, ii, sheet);
+                            case "ER":
+                                read(ER, ii, sheet);
                                 break;
                             case "RM":
                                 read(RM, ii, sheet);
@@ -244,11 +248,11 @@ public class Data {
                             case "R ":
                                 read(R, ii, sheet);
                                 break;
-                            case "G1":
-                                read(G1, ii, sheet);
+                            case "G":
+                                read(G, ii, sheet);
                                 break;
-                            case "G2":
-                                read(G2, ii, sheet);
+                            case "RO":
+                                read(RO, ii, sheet);
                                 break;
                             case "L1":
                                 read(L1, ii, sheet);
@@ -258,9 +262,6 @@ public class Data {
                                 break;
                             case "DE":
                                 read(DE, ii, sheet);
-                                break;
-                            case "CJ":
-                                read(CJ, ii, sheet);
                                 break;
                             case "RE":
                                 read(RE, ii, sheet);
