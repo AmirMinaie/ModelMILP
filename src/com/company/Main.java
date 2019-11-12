@@ -22,9 +22,10 @@ public class Main {
         Data data = new Data(filePath);
         Module module = new Module(data);
 
-        boolean solve = module.cplex.solve();
-        module.SetAmount(solve);
         module.cplex.exportModel("./Data//m.lp");
+        boolean solve = module.cplex.solve();
+
+        module.SetAmount(solve);
         System.out.println(String.valueOf(solve));
         if (solve)
             System.out.println(String.valueOf(module.cplex.getObjValue()));

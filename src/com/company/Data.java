@@ -401,7 +401,6 @@ public class Data {
         }
     }
 
-
     public void read(HashMapAmir Par, int ii, Sheet sheet) {
         int lastRow = sheet.getLastRowNum();
         for (int l = 2; l <= lastRow; l++) {
