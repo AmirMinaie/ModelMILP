@@ -64,7 +64,7 @@ public class Data {
     public HashMapAmir<String, Double> ER = new HashMapAmir<String, Double>(2, "ER");
     public HashMapAmir<String, Double> RM = new HashMapAmir<String, Double>(2, "RM");
     public HashMapAmir<String, Double> CA = new HashMapAmir<String, Double>(1, "CA");
-    public HashMapAmir<String, Double> CO = new HashMapAmir<String, Double>(2, "CO");
+    public HashMapAmir<String, Double> CO = new HashMapAmir<String, Double>(3, "CO");
     public HashMapAmir<String, Double> BU = new HashMapAmir<String, Double>(1, "BU");
     public HashMapAmir<String, Double> R = new HashMapAmir<String, Double>(1, "R");
     public HashMapAmir<String, Double> G = new HashMapAmir<String, Double>(2, "G");
@@ -76,6 +76,8 @@ public class Data {
     public HashMapAmir<String, Double> CU = new HashMapAmir<>(1, "CU");
     public HashMapAmir<String, Double> BE = new HashMapAmir<>(3, "BE");
     public HashMapAmir<String, Double> par = new HashMapAmir<>(1, "par");
+    public HashMapAmir<String, Double> vp = new HashMapAmir<>(1, "vp");
+    public HashMapAmir<String, Double> wp = new HashMapAmir<>(1, "wp");
 
     private boolean SaveZero;
     //endregion
@@ -245,7 +247,7 @@ public class Data {
                             case "BU":
                                 read(BU, ii, sheet);
                                 break;
-                            case "R ":
+                            case "R":
                                 read(R, ii, sheet);
                                 break;
                             case "G":
@@ -274,6 +276,12 @@ public class Data {
                                 break;
                             case "PA":
                                 read(par, ii, sheet);
+                                break;
+                            case "VP":
+                                read(vp, ii, sheet);
+                                break;
+                            case "WP":
+                                read(wp, ii, sheet);
                                 break;
                         }
                     }

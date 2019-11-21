@@ -44,7 +44,7 @@ public class Module {
     public HashMapAmir<String, IloNumVar> P;
     public HashMapAmir<String, IloNumVar> At;
     public HashMapAmir<String, IloNumVar> W;
-    public Double BN = Math.pow(10,10);
+    public Double BN = Math.pow(10, 10);
     public IloCplex cplex;
     public IloLinearNumExpr obj;
     //endregion
@@ -54,9 +54,16 @@ public class Module {
 
     public Module(Data data) {
         this.data = data;
+        System.out.println("start read Data");
         data.ReadData();
+        System.out.println("End read Data");
+
+        System.out.println("start init Variables");
         initVariables();
+        System.out.println("end init Variables");
+        System.out.println("start initConstraints");
         initConstraints();
+        System.out.println("end initConstraints");
     }
 
     public void initConstraints() {
@@ -825,7 +832,7 @@ public class Module {
                         for (int h = 0; h < data.ho; h++)
                             for (int o = 0; o < data.o; o++)
                                 for (int tf = 0; tf <= t; tf++) {
-                                    Exp28.addTerm(-1 * data.CO.get("h" + h, "o" + o),
+                                    Exp28.addTerm(-1 * data.CO.get("h" + h, "o" + o, "p" + p),
                                             FF.get("f" + f, "h" + h, "o" + o, "t" + tf, "p" + p));
                                 }
                         constraints.get(constraints.size() - 1).add(cplex.addLe(Exp28, 0, GenConstrint((constraints.size() + 1), "q", counter)));
@@ -857,15 +864,15 @@ public class Module {
                 for (int p = 0; p < data.p; p++)
                     for (int t = 0; t < data.t; t++) {
                         IloLinearNumExpr Exp30 = cplex.linearNumExpr();
-                        Exp30.addTerm(1, Sn.get("i" + i, "t" + t, "p" + p));
-                        Exp30.addTerm(1, Sh.get("i" + i, "t" + t, "p" + p));
-                        Exp30.addTerm(1, Sm.get("i" + i, "t" + t, "p" + p));
-                        Exp30.addTerm(1, Sl.get("i" + i, "t" + t, "p" + p));
+                        Exp30.addTerm(data.vp.get("p" + p), Sn.get("i" + i, "t" + t, "p" + p));
+                        Exp30.addTerm(data.vp.get("p" + p), Sh.get("i" + i, "t" + t, "p" + p));
+                        Exp30.addTerm(data.vp.get("p" + p), Sm.get("i" + i, "t" + t, "p" + p));
+                        Exp30.addTerm(data.vp.get("p" + p), Sl.get("i" + i, "t" + t, "p" + p));
 
                         for (int k = 0; k < data.k; k++)
                             for (int z = 0; z < data.z; z++) {
-                                Exp30.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p), 1);
-                                Exp30.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p), 1);
+                                Exp30.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p), data.vp.get("p" + p));
+                                Exp30.addTerm(X.get("z" + z, "i" + i, "t" + t, "k" + k, "p" + p), data.vp.get("p" + p));
 
                             }
                         for (int h = 0; h < data.hi; h++)
@@ -898,8 +905,8 @@ public class Module {
                     for (int i = 0; i < data.i; i++) {
                         for (int k = 0; k < data.k; k++)
                             for (int p = 0; p < data.p; p++)
-                                Exp34.addTerm(X.get("i" + i, "d" + d, "t" + t, "k" + k, "p" + p)
-                                        , 1);
+                                Exp34.addTerm(data.wp.get("p" + p), X.get("i" + i, "d" + d, "t" + t, "k" + k, "p" + p)
+                                );
 
                         for (int h = 0; h < data.hd; h++)
                             for (int tf = 0; tf <= t; tf++)
@@ -933,7 +940,7 @@ public class Module {
                     for (int i = 0; i < data.i; i++)
                         for (int k = 0; k < data.k; k++)
                             for (int p = 0; p < data.p; p++)
-                                Exp37.addTerm(1,
+                                Exp37.addTerm(data.wp.get("p" + p),
                                         X.get("n" + n, "i" + i, "t" + t, "k" + k, "p" + p));
 
                     for (int h = 0; h < data.hn; h++)
@@ -968,7 +975,7 @@ public class Module {
                     for (int i = 0; i < data.i; i++)
                         for (int k = 0; k < data.k; k++)
                             for (int p = 0; p < data.p; p++)
-                                Exp40.addTerm(1,
+                                Exp40.addTerm(data.wp.get("p" + p),
                                         X.get("m" + m, "i" + i, "t" + t, "k" + k, "p" + p));
                     for (int h = 0; h < data.hm; h++)
                         for (int tf = 0; tf <= t; tf++)
