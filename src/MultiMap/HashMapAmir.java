@@ -1,6 +1,5 @@
 package MultiMap;
 
-
 import java.util.ArrayList;
 
 public class HashMapAmir<K, V> {
@@ -40,13 +39,13 @@ public class HashMapAmir<K, V> {
     public V get(K... Key) {
 
 
-        if (Key.length != this.numberKey) {
-            String E = name + "(";
-            for (int i = 0; i < Key.length - 1; i++)
-                E += Key[i] + ",";
-            E += Key[Key.length - 1] + ")";
-            throw new IllegalArgumentException("not Equal number key and legheth key:" + E);
-        }
+//        if (Key.length != this.numberKey) {
+//            String E = name + "(";
+//            for (int i = 0; i < Key.length - 1; i++)
+//                E += Key[i] + ",";
+//            E += Key[Key.length - 1] + ")";
+//            throw new IllegalArgumentException("not Equal number key and legheth key:" + E);
+//        }
 
         for (MapAmir m : values) {
             boolean b = true;
@@ -68,9 +67,11 @@ public class HashMapAmir<K, V> {
         E += Key[Key.length - 1] + ")";
 
         //region throw Exception
-        throw new IllegalArgumentException("Parametr: " + E);
+//        throw new IllegalArgumentException("Parametr: " + E);
+        System.err.println("Parametr: " + E);
         //endregion
 
+        return values.get(1).getValue();
     }
 
     public Object gets(String... Key) {
@@ -100,24 +101,24 @@ public class HashMapAmir<K, V> {
     public void put(V value, K... Key) {
 
         boolean add = true;
-
-        for (MapAmir m : values) {
-            boolean b = true;
-
-            for (int i = 0; i < numberKey; i++) {
-                if (!m.getKey()[i].equals(Key[i])) {
-                    b = false;
-                    break;
-                }
-            }
-
-            if (b)
-                add = false;
-
-        }
-        if (add) {
+//
+//        for (MapAmir m : values) {
+//            boolean b = true;
+//
+//            for (int i = 0; i < numberKey; i++) {
+//                if (!m.getKey()[i].equals(Key[i])) {
+//                    b = false;
+//                    break;
+//                }
+//            }
+//
+//            if (b)
+//                add = false;
+//
+//        }
+//        if (add) {
             values.add(new MapAmir<>(this.name, value, Key));
-        }
+//        }
     }
 
     public int size() {

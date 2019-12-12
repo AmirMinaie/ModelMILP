@@ -1,21 +1,19 @@
 package com.company;
 
 import MultiMap.HashMapAmir;
-import MultiMap.MapAmir;
 import ilog.concert.IloNumVar;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 
 public class Data {
 
     private String FilePath;
+    private ArrayList<ArrayList<String>> out = new ArrayList<>();
+    private int Max = 0;
 
     //region Sets
     public int s = 0;
@@ -78,7 +76,6 @@ public class Data {
     public HashMapAmir<String, Double> par = new HashMapAmir<>(1, "par");
     public HashMapAmir<String, Double> vp = new HashMapAmir<>(1, "vp");
     public HashMapAmir<String, Double> wp = new HashMapAmir<>(1, "wp");
-
     private boolean SaveZero;
     //endregion
 
@@ -288,7 +285,10 @@ public class Data {
                 }
             }
 
+            wb.close();
+            wb = null;
             fis.close();
+            fis = null;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -299,114 +299,90 @@ public class Data {
 
     public void WriteData(Module module) {
         this.SaveZero = par.get("q0").equals(1.0);
-        FileInputStream fis = null;
-        Workbook wb = null;
-        FileOutputStream fos = null;
+
+        new File("./Data//output").mkdir();
+
+        writevalibel(module.WH);
+        writevalibel(module.FF);
+        writevalibel(module.Q);
+        writevalibel(module.DA);
+        writevalibel(module.RF);
+        writevalibel(module.RM);
+        writevalibel(module.TR1);
+        writevalibel(module.TR2);
+        writevalibel(module.TR3);
+        writevalibel(module.X);
+        writevalibel(module.XM);
+        writevalibel(module.Sh);
+        writevalibel(module.Sm);
+        writevalibel(module.Sl);
+        writevalibel(module.Sn);
+        writevalibel(module.NTC);
+        writevalibel(module.ENCT);
+        writevalibel(module.ENC);
+        writevalibel(module.TFC);
+        writevalibel(module.TOC);
+        writevalibel(module.TTC);
+        writevalibel(module.TPC);
+        writevalibel(module.BEN);
+        writevalibel(module.TEN);
+        writevalibel(module.PEN);
+        writevalibel(module.EN);
+        writevalibel(module.FC);
+        writevalibel(module.P);
+        writevalibel(module.At);
+        writevalibel(module.W);
+
+        PrintWriter OutPar = null;
         try {
-
-            fis = new FileInputStream(FilePath);
-            wb = WorkbookFactory.create(fis);
-            fis.close();
-            Sheet sheet = null;
-
-            try {
-                wb.removeSheetAt(wb.getSheetIndex("outPut"));
-            } catch (Exception e) {
-            }
-            sheet = wb.createSheet("outPut");
-
-
-            writevalibel(sheet, module.WH);
-            writevalibel(sheet, module.FF);
-            writevalibel(sheet, module.Q);
-            writevalibel(sheet, module.DA);
-            writevalibel(sheet, module.RF);
-            writevalibel(sheet, module.RM);
-            writevalibel(sheet, module.TR1);
-            writevalibel(sheet, module.TR2);
-            writevalibel(sheet, module.TR3);
-            writevalibel(sheet, module.X);
-            writevalibel(sheet, module.XM);
-            writevalibel(sheet, module.Sh);
-            writevalibel(sheet, module.Sm);
-            writevalibel(sheet, module.Sl);
-            writevalibel(sheet, module.Sn);
-            writevalibel(sheet, module.NTC);
-            writevalibel(sheet, module.ENCT);
-            writevalibel(sheet, module.ENC);
-            writevalibel(sheet, module.TFC);
-            writevalibel(sheet, module.TOC);
-            writevalibel(sheet, module.TTC);
-            writevalibel(sheet, module.TPC);
-            writevalibel(sheet, module.BEN);
-            writevalibel(sheet, module.TEN);
-            writevalibel(sheet, module.PEN);
-            writevalibel(sheet, module.EN);
-            writevalibel(sheet, module.FC);
-            writevalibel(sheet, module.P);
-            writevalibel(sheet, module.At);
-            writevalibel(sheet, module.W);
-
-
-            fos = new FileOutputStream(FilePath);
-            wb.write(fos);
-            fos.close();
-
+            OutPar = new PrintWriter("./Data//outPar.txt");
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
-
-            try {
-                fos.close();
-            } catch (IOException exc) {
-                exc.printStackTrace();
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            try {
-                fos.close();
-            } catch (IOException exc) {
-                exc.printStackTrace();
-            }
-
         }
+
+        for (int l = 0; l < Max; l++) {
+
+            String K = "";
+            for (ArrayList i : out) {
+                if (i.size() > l)
+                    K += (String) i.get(l) + ";";
+                else
+                    K += ";".repeat(ContChar(i.get(0).toString(), ';') + 1);
+            }
+            OutPar.println(K);
+        }
+        OutPar.close();
+
     }
 
-    private void writevalibel(Sheet sheet, HashMapAmir<String, IloNumVar> ff) {
-        int c = 0;
-        if (sheet.getRow(1) != null)
-            c = sheet.getRow(1).getLastCellNum();
+    private void writevalibel(HashMapAmir<String, IloNumVar> ff) {
+        ArrayList<String> o = new ArrayList<>();
 
-        Row row = sheet.getRow(0);
-        if (row == null)
-            row = sheet.createRow(0);
-        row.createCell(c).setCellValue(ff.getName());
+        o.add(ff.getName() + ";".repeat(ff.getNumberKey()));
 
-        int r = 1;
-        for (MapAmir m : ff.getValus()) {
-            if (this.SaveZero) {
-                for (int i = 0; i < m.getKey().length; i++) {
-                    row = sheet.getRow(r);
-                    if (row == null)
-                        row = sheet.createRow(r);
-                    row.createCell(i + c).setCellValue(m.getKey()[i] + "");
-                }
-                sheet.getRow(r).createCell(c + m.getKey().length).setCellValue(m.getAmount());
+        if (ff.getValus().size() > Max)
+            Max = ff.getValus().size();
 
-                r++;
+        for (int i = 0; i < ff.getValus().size(); i++) {
+            if (SaveZero) {
+                String k = "";
+                for (Object s : ff.getValus().get(i).getKey())
+                    k += (String) s + ";";
+
+                k += ff.getValus().get(i).getAmount() + "";
+                o.add(k);
             } else {
-                if (Math.round(m.getAmount()) != 0) {
-                    for (int i = 0; i < m.getKey().length; i++) {
-                        row = sheet.getRow(r);
-                        if (row == null)
-                            row = sheet.createRow(r);
-                        row.createCell(i + c).setCellValue(m.getKey()[i] + "");
-                    }
-                    sheet.getRow(r).createCell(c + m.getKey().length).setCellValue(m.getAmount());
+                if (ff.getValus().get(i).getAmount() != 0) {
+                    String k = "";
+                    for (Object s : ff.getValus().get(i).getKey())
+                        k += (String) s + ";";
 
-                    r++;
+                    k += ff.getValus().get(i).getAmount() + "";
+                    o.add(k);
                 }
             }
         }
+        out.add(o);
     }
 
     public void read(HashMapAmir Par, int ii, Sheet sheet) {
@@ -424,5 +400,16 @@ public class Data {
             Par.put(sheet.getRow(l).getCell(Par.getNumberKey() + ii), key);
 
         }
+    }
+
+    public int ContChar(String a, char ch) {
+        int count = 0;
+
+        //Counts each character except space
+        for (int i = 0; i < a.length(); i++) {
+            if (a.charAt(i) == ch)
+                count++;
+        }
+        return count;
     }
 }

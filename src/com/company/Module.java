@@ -44,7 +44,7 @@ public class Module {
     public HashMapAmir<String, IloNumVar> P;
     public HashMapAmir<String, IloNumVar> At;
     public HashMapAmir<String, IloNumVar> W;
-    public Double BN = Math.pow(10, 10);
+    public Double BN = Double.MAX_VALUE;
     public IloCplex cplex;
     public IloLinearNumExpr obj;
     //endregion
@@ -69,6 +69,9 @@ public class Module {
     public void initConstraints() {
         try {
 
+            long startTime = System.currentTimeMillis();
+
+
             //region Objects Value
             obj = cplex.linearNumExpr();
             obj.addTerm(1, NTC.get("q0"));
@@ -77,9 +80,10 @@ public class Module {
             //endregion
 
             //region 2
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             IloLinearNumExpr Con2 = cplex.linearNumExpr();
 
-            Con2.addTerm(1, TFC.get("q0"));
+            Con2.addTerm(data.par.get("q1"), TFC.get("q0"));
             Con2.addTerm(1, TTC.get("q0"));
             Con2.addTerm(1, TOC.get("q0"));
             Con2.addTerm(1, TPC.get("q0"));
@@ -91,6 +95,7 @@ public class Module {
             //endregion
 
             //region 3
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " " + (System.currentTimeMillis() - startTime) + " milliseconds");
             IloLinearNumExpr Con3 = cplex.linearNumExpr();
             Con3.addTerm(-1, TFC.get("q0"));
 
@@ -105,6 +110,7 @@ public class Module {
             //endregion
 
             //region 4
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int t = 0; t < data.t; t++) {
                 IloLinearNumExpr Exp = cplex.linearNumExpr();
@@ -145,6 +151,7 @@ public class Module {
             //endregion
 
             //region 5
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             IloLinearNumExpr Exp5 = cplex.lqNumExpr();
             Exp5.addTerm(-1, TTC.get("q0"));
@@ -237,6 +244,7 @@ public class Module {
             //endregion
 
             //region 6
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             IloLinearNumExpr EXP6 = cplex.linearNumExpr();
             EXP6.addTerm(TOC.get("q0"), -1);
@@ -282,6 +290,7 @@ public class Module {
             //endregion
 
             //region 7
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             IloLinearNumExpr Exp7 = cplex.linearNumExpr();
 
@@ -318,6 +327,7 @@ public class Module {
             //endregion
 
             //region 8
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             IloLinearNumExpr Exp8 = cplex.linearNumExpr();
             Exp8.addTerm(BEN.get("q0"), -1);
@@ -346,6 +356,7 @@ public class Module {
             //endregion
 
             //region 9
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int t = 0; t < data.t; t++) {
                 constraints.get(constraints.size() - 1).add(cplex.addEq(cplex.sum(TEN.get("t" + t), PEN.get("t" + t), cplex.prod(-1, EN.get("t" + t)))
@@ -354,6 +365,7 @@ public class Module {
             //endregion
 
             //region 10
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int t = 0; t < data.t; t++) {
                 IloLinearNumExpr Exp10 = cplex.linearNumExpr();
@@ -431,6 +443,7 @@ public class Module {
             //endregion
 
             //region 11
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int t = 0; t < data.t; t++) {
 
@@ -447,6 +460,7 @@ public class Module {
             //endregion
 
             //region 12
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             IloLinearNumExpr Exp12 = cplex.linearNumExpr();
             Exp12.addTerm(-1, ENCT.get("q0"));
@@ -456,6 +470,7 @@ public class Module {
             //endregion
 
             //region 13
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
 
             for (int t = 0; t < data.t; t++) {
@@ -470,6 +485,7 @@ public class Module {
             //endregion
 
             //region 14
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int t = 0; t < data.t; t++) {
                 IloLinearNumExpr Exp14 = cplex.linearNumExpr();
@@ -483,6 +499,7 @@ public class Module {
             //endregion
 
             //region 15
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int t = 0; t < data.t; t++) {
 
@@ -497,6 +514,7 @@ public class Module {
             //endregion
 
             //region 16
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             int counter = 0;
             for (int e = 1; e < data.e - 1; e++)
@@ -518,6 +536,7 @@ public class Module {
             //endregion
 
             //region 17
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int t = 0; t < data.t; t++) {
 
@@ -529,6 +548,7 @@ public class Module {
             //endregion
 
             //region 18
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
 
@@ -554,6 +574,7 @@ public class Module {
             //endregion
 
             //region 19
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int j = 0; j < data.j; j++)
@@ -579,6 +600,7 @@ public class Module {
             //endregion
 
             //region 20
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int j = 0; j < data.j; j++)
@@ -617,7 +639,25 @@ public class Module {
                 }
             //endregion
 
+            //region  21+
+            constraints.add(new ArrayList<>());
+            counter = 0;
+            for (int q = 0; q < data.q; q++) {
+
+                IloLinearNumExpr Exp20 = cplex.linearNumExpr();
+                for (int j = 0; j < data.j; j++)
+                    for (int d = 0; d < data.d; d++)
+                        for (int k = 0; k < data.k; k++)
+                            Exp20.addTerm(1, X.get("j" + j, "d" + d, "q" + q, "t" + 0, "k" + k));
+
+
+                constraints.get(constraints.size() - 1).add(cplex.addEq(Exp20, 0, GenConstrint((constraints.size() + 1), "q", counter)));
+                counter++;
+            }
+            //endregion
+
             //region 22
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
 
@@ -638,6 +678,7 @@ public class Module {
             //endregion
 
             //region 23
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
 
@@ -655,6 +696,7 @@ public class Module {
             //endregion
 
             //region 24
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
 
@@ -673,6 +715,7 @@ public class Module {
             //endregion
 
             //region 25
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
 
@@ -689,6 +732,7 @@ public class Module {
             //endregion
 
             //region 26
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int m = 0; m < data.m; m++)
@@ -714,6 +758,7 @@ public class Module {
             //endregion
 
             //region 27
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
 
@@ -748,6 +793,7 @@ public class Module {
             //endregion
 
             //region 28
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
 
@@ -771,6 +817,7 @@ public class Module {
             //endregion
 
             //region 29
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
 
@@ -794,6 +841,7 @@ public class Module {
             //endregion
 
             //region 30
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
 
@@ -817,6 +865,7 @@ public class Module {
             //endregion
 
             //region 31
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int f = 0; f < data.f; f++)
@@ -841,6 +890,7 @@ public class Module {
             //endregion
 
             //region 32
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
 
             for (int f = 0; f < data.f; f++) {
@@ -858,6 +908,7 @@ public class Module {
             //endregion
 
             //region 33
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int i = 0; i < data.i; i++)
@@ -885,6 +936,7 @@ public class Module {
             //endregion
 
             //region 34
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int i = 0; i < data.i; i++) {
                 IloLinearNumExpr Exp32 = cplex.linearNumExpr();
@@ -896,6 +948,7 @@ public class Module {
             //endregion
 
             //region 35
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int t = 0; t < data.t; t++)
@@ -919,6 +972,7 @@ public class Module {
             //endregion
 
             //region 36
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int d = 0; d < data.d; d++) {
 
@@ -931,6 +985,7 @@ public class Module {
             //endregion
 
             //region 37
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int t = 0; t < data.t; t++)
@@ -953,6 +1008,7 @@ public class Module {
             //endregion
 
             //region 38
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int n = 0; n < data.n; n++) {
                 IloLinearNumExpr Exp38 = cplex.linearNumExpr();
@@ -966,6 +1022,7 @@ public class Module {
             //endregion
 
             //region 39
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int t = 0; t < data.t; t++)
@@ -987,6 +1044,7 @@ public class Module {
             //endregion
 
             //region 40
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int m = 0; m < data.m; m++) {
                 IloLinearNumExpr Exp41 = cplex.linearNumExpr();
@@ -1000,6 +1058,7 @@ public class Module {
             //endregion
 
             //region 41
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int t = 0; t < data.t; t++)
@@ -1021,6 +1080,7 @@ public class Module {
             //endregion
 
             //region 42
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int q = 0; q < data.q; q++) {
                 IloLinearNumExpr Exp44 = cplex.linearNumExpr();
@@ -1035,6 +1095,7 @@ public class Module {
             //endregion
 
             //region 43
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int t = 0; t < data.t; t++) {
                 IloLinearNumExpr Exp46 = cplex.linearNumExpr();
@@ -1050,6 +1111,7 @@ public class Module {
             //endregion
 
             //region 44
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int t = 0; t < data.t; t++)
@@ -1061,7 +1123,7 @@ public class Module {
                             for (int k = 0; k < data.k; k++)
                                 Exp48.addTerm(X.get("i" + i, "z" + z, "t" + t, "k" + k, "p" + p), 1);
 
-                        constraints.get(constraints.size() - 1).add(cplex.addGe(Exp48,
+                        constraints.get(constraints.size() - 1).add(cplex.addLe(Exp48,
                                 data.DE.get("z" + z, "t" + t, "p" + p), GenConstrint((constraints.size() + 1), "q", counter)));
 
                         counter++;
@@ -1069,6 +1131,7 @@ public class Module {
             //endregion
 
             //region 45
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int t = 0; t < data.t; t++)
@@ -1088,6 +1151,7 @@ public class Module {
             //endregion
 
             //region 46
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
 
             IloLinearNumExpr Exp50 = cplex.linearNumExpr();
@@ -1098,6 +1162,7 @@ public class Module {
             //endregion
 
             //region 47
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
 
             IloLinearNumExpr Exp52 = cplex.linearNumExpr();
@@ -1110,6 +1175,7 @@ public class Module {
             //endregion
 
             //region 48
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
 
             IloLinearNumExpr Exp54 = cplex.linearNumExpr();
@@ -1122,6 +1188,7 @@ public class Module {
             //endregion
 
             //region 49
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int k = 0; k < data.k; k++) {
 
@@ -1149,6 +1216,7 @@ public class Module {
             //endregion
 
             //region 50
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int k = 0; k < data.k; k++) {
 
@@ -1190,6 +1258,7 @@ public class Module {
             //endregion
 
             //region 51
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             for (int k = 0; k < data.k; k++) {
 
@@ -1207,6 +1276,7 @@ public class Module {
             //endregion
 
             //region 52
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int f = 0; f < data.f; f++)
@@ -1228,6 +1298,7 @@ public class Module {
             //endregion
 
             //region 53
+            System.out.println("c " + constraints.size() + " " + ((System.currentTimeMillis() - startTime) / 1000) + " ");
             constraints.add(new ArrayList<>());
             counter = 0;
             for (int o = 0; o < data.o; o++)

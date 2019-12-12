@@ -1,7 +1,5 @@
 package com.company;
-
 import ilog.concert.IloException;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
